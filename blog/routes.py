@@ -1,6 +1,6 @@
 from flask import render_template, url_for, request, flash, redirect
 from blog import app, db, bcrypt
-from blog.forms import RegistrationForm, LoginForm
+from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm
 from blog.model import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -68,8 +68,23 @@ def logout():
     return redirect(url_for("home"))
 
 
-@app.route("/profile")
+@app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == "POST":
+        return redirect(url_for('change_profile'))
     profile_image = url_for('static', filename='profile.png')
-    return render_template("profile.html", title="Account", profile_image=profile_image)
+    return render_template("profile.html", title="Account",
+                           profile_image=profile_image, change_profile=True)
+
+
+@app.route("/change_profile_info", methods=['POST', 'GET'])
+def change_profile():
+    if request.method == 'POST':
+        pass
+    else:
+        form = UpdateProfileForm()
+        profile_image = url_for('static', filename='profile.png')
+        return render_template("edit_profile.html", title="Account",
+                               profile_image=profile_image, form=form)
+
