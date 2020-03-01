@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-section text-dark">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group ">
+            <legend class="border-bottom mb-4 text-lg">Sign In</legend>
+            <div class="form-group">
+                {{ form.email.label(class='form-control-label') }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                        <span>{{ error }} </span>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class='form-control-label') }}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                        <span>{{ error }} </span>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-check">
+                {{ form.remember_me(class="form-check-input") }}
+                {{ form.remember_me.label(class="form-check-label") }}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+        <small class="text-muted form-group">
+            <a href="#">Forgot Password</a>
+        </small>
+    </form>
+</div>
+<div class="form-group">
+    <small class="text-muted">
+        Need An Account? <a href="{{ url_for('register') }}">Register</a>
+    </small>
+</div>
+{% endblock %}
