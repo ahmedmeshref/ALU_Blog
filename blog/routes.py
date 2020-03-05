@@ -15,7 +15,7 @@ from sqlalchemy import desc
 def home():
     posts = Post.query.order_by(desc(Post.date)).all()
     return render_template("home.html", posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime)
+                           datetime=datetime, current_user=current_user)
 
 
 @app.route("/about")
@@ -141,3 +141,13 @@ def new_post():
             db.session.commit()
             return redirect(url_for('home'))
     return render_template("add_post.html", title="Add New Post", form=form)
+
+
+@app.route("/delete_post/<int:post_id>")
+def delete_post(post_id):
+    pass
+
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+def edit_post(post_id):
+    pass
