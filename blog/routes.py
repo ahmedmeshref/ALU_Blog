@@ -1,22 +1,21 @@
-from flask import render_template, url_for, request, flash, redirect
+import os
+import re
+from PIL import Image
+from flask import render_template, url_for, request, flash, redirect, Markup
 from blog import app, db, bcrypt
-from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm, AddPostForm
 from blog.model import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
-
-posts = [
-    {
-        "author": "Ahmed Meshref",
-        "date_posted": "12/05/2019",
-        "title": "Facilitators are bad",
-        "content": "I need my tuition back!!"
-    }
-]
+import secrets
+from datetime import datetime
+from sqlalchemy import desc
 
 
 @app.route("/")
 def home():
-    return render_template("home.html", posts=posts)
+    posts = Post.query.order_by(desc(Post.date)).all()
+    return render_template("home.html", posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                           datetime=datetime)
 
 
 @app.route("/about")
@@ -58,7 +57,7 @@ def login():
                     return redirect(next_page)
                 return redirect(url_for("home"))
             else:
-                flash("incorrect Email or password", "danger")
+                flash("incorrect email or password!", "danger")
     return render_template("login.html", title='Login', form=form)
 
 
@@ -73,18 +72,72 @@ def logout():
 def profile():
     if request.method == "POST":
         return redirect(url_for('change_profile'))
-    profile_image = url_for('static', filename='profile.png')
-    return render_template("profile.html", title="Account",
-                           profile_image=profile_image, change_profile=True)
+    image_f = url_for('static', filename='profile_pics/' + current_user.profile_image)
+    return render_template("profile.html", title=f"profile - {current_user.username}",
+                           profile_image=image_f, change_profile=True, hide_side_bar=True,
+                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                           datetime=datetime,
+                           posts=Post.query.filter_by(user_id=current_user.id).all())
+
+
+def save_picture(new_picture):
+    # create a random string to be the name of the file
+    random_token = secrets.token_hex(8)
+    # extract the given picture's extension
+    pic_ext = re.findall(r"\.[a-zA-Z]+", new_picture.filename)[-1]
+    new_picture_fn = random_token + pic_ext
+    # get the path to store the new picture in (application path + static folder)
+    new_picture_path = os.path.join(app.root_path, 'static/profile_pics', new_picture_fn)
+    # resize the image
+    picture_f = Image.open(new_picture)
+    picture_f.thumbnail((250, 250))
+    # save the picture
+    picture_f.save(new_picture_path)
+    return new_picture_fn
+
+
+def delete_current_picture():
+    picture_file = current_user.profile_image
+    # join the path of the current user's profile picture
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_file)
+    # delete the picture
+    os.remove(picture_path)
 
 
 @app.route("/change_profile_info", methods=['POST', 'GET'])
+@login_required
 def change_profile():
+    form = UpdateProfileForm()
     if request.method == 'POST':
-        pass
-    else:
-        form = UpdateProfileForm()
-        profile_image = url_for('static', filename='profile.png')
-        return render_template("edit_profile.html", title="Account",
-                               profile_image=profile_image, form=form)
+        if form.validate_on_submit():
+            if form.new_picture.data:
+                # delete the current picture from the profile_pics file locally
+                delete_current_picture()
+                # add the given picture to the profile_pics file and get the path of the picture
+                new_picture_fn = save_picture(form.new_picture.data)
+                # change the name of the profile picture in the database in the database
+                current_user.profile_image = new_picture_fn
+                flash("Your profile picture has been updated successfully", "success")
+            if form.new_username.data != current_user.username:
+                current_user.username = form.new_username.data
+                flash("Your username has been updated successfully", "success")
+            db.session.commit()
+            return redirect(url_for('profile'))
+    # set the value of the new username to the current username
+    form.new_username.data = current_user.username
+    image_f = url_for('static', filename='profile_pics/' + current_user.profile_image)
+    return render_template("edit_profile.html", title="Edit Profile",
+                           profile_image=image_f, form=form, hide_side_bar=True)
 
+
+@app.route("/post/new", methods=["GET", "POST"])
+@login_required
+def new_post():
+    form = AddPostForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            post = Post(title=form.title.data, content=form.content.data, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            return redirect(url_for('home'))
+    return render_template("add_post.html", title="Add New Post", form=form)

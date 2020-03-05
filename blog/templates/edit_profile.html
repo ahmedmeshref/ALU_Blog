@@ -1,7 +1,7 @@
 {% extends 'base.html' and 'profile.html' %}
 
 {% block change_username %}
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <fieldset class="form-group ">
             <legend class="border-bottom mb-4 text-lg">Change Profile Info</legend>
@@ -11,11 +11,20 @@
                     {{ form.new_username(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.new_username.errors %}
-                        <span>{{ error }} </span>
+                            <span>{{ error }} </span>
                         {% endfor %}
                     </div>
                 {% else %}
                     {{ form.new_username(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.new_picture.label }}
+                {{ form.new_picture(class="form-control-file  btn btn-outline-light") }}
+                {% if form.new_picture.errors %}
+                        {% for error in form.new_picture.errors %}
+                            <span class="text-danger">{{ error }} </span>
+                        {% endfor %}
                 {% endif %}
             </div>
         </fieldset>

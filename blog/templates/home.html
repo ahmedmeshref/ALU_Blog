@@ -3,10 +3,26 @@
 {% block content %}
     {% for post in posts%}
         <article class="media content-section">
+          <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
+               alt="user_image" class="rounded-circle article-img">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
+              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <small class="text-muted">
+                  {% set time_diff = datetime.strptime(now, "%Y-%m-%d %H:%M:%S") -
+                  datetime.strptime(post.date.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S") %}
+                  {% if time_diff.days//7 %}
+                    {{ time_diff.days//7 }} weeks ago
+                  {% elif time_diff.days %}
+                    {{ time_diff.days }} days ago
+                  {% elif time_diff.seconds//3600 %}
+                    {{ time_diff.seconds // 3600 }} hours ago
+                  {% elif time_diff.seconds//60 %}
+                    {{ time_diff.seconds // 60 }} minutes ago
+                  {% else %}
+                    1 minute ago
+                  {% endif %}
+              </small>
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
             <p class="article-content text-dark">{{ post.content }}</p>
