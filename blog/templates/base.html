@@ -30,7 +30,7 @@
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" href="{{ url_for('new_post') }}">Post</a>
-                <a class="nav-item nav-link" href="{{ url_for('profile') }}">Profile</a>
+                <a class="nav-item nav-link" href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
@@ -55,18 +55,16 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
-        {% if not hide_side_bar %}
-            <div class="col-md-4">
-              <div class="content-section">
-                <h3>Notifications</h3>
-                  <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Latest Posts</li>
-                    <li class="list-group-item list-group-item-light">Announcements</li>
-                    <li class="list-group-item list-group-item-light">Calendars</li>
-                  </ul>
-              </div>
-            </div>
-      {% endif %}
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Notifications</h3>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+              </ul>
+          </div>
+        </div>
       </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

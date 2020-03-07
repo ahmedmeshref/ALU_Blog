@@ -10,7 +10,7 @@
           <p class="text-secondary">{{ current_user.email }}</p>
           {% if change_profile %}
               <form method="POST" action="">
-                 <button class="btn btn-outline-info">Change Profile Info</button>
+                 <button class="btn btn-outline-primary">Update Profile</button>
               </form>
           {% endif %}
         </div>
@@ -18,5 +18,4 @@
       {% block change_username %}
       {% endblock %}
     </div>
-    {% include "home.html" %}
 {% endblock %}

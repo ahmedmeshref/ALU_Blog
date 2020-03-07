@@ -1,7 +1,7 @@
 import os
 import re
 from PIL import Image
-from flask import render_template, url_for, request, flash, redirect, Markup
+from flask import render_template, url_for, request, flash, redirect, abort
 from blog import app, db, bcrypt
 from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm, AddPostForm
 from blog.model import User, Post
@@ -67,17 +67,19 @@ def logout():
     return redirect(url_for("home"))
 
 
-@app.route("/profile", methods=['GET', 'POST'])
+@app.route("/profile/<user_id>", methods=['GET', 'POST'])
 @login_required
-def profile():
+def profile(user_id):
+    # check if the current user is viewing his own profile or someone else's
+    user = User.query.get_or_404(user_id)
     if request.method == "POST":
-        return redirect(url_for('change_profile'))
-    image_f = url_for('static', filename='profile_pics/' + current_user.profile_image)
+        return redirect(url_for('change_profile', user_id=user.id))
+    same_user = True
+    if user != current_user:
+        same_user = False
+    image_f = url_for('static', filename='profile_pics/' + user.profile_image)
     return render_template("profile.html", title=f"profile - {current_user.username}",
-                           profile_image=image_f, change_profile=True, hide_side_bar=True,
-                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime,
-                           posts=Post.query.filter_by(user_id=current_user.id).all())
+                           profile_image=image_f, change_profile=same_user)
 
 
 def save_picture(new_picture):
@@ -104,9 +106,15 @@ def delete_current_picture():
     os.remove(picture_path)
 
 
-@app.route("/change_profile_info", methods=['POST', 'GET'])
+@app.route("/profile/<user_id>/update_profile", methods=['POST', 'GET'])
 @login_required
-def change_profile():
+def change_profile(user_id):
+    # check if the given user_id exist
+    user = User.query.get_or_404(user_id)
+    # check if the request was made by the account user
+    if user != current_user:
+        # if not return forbidden page error
+        abort(403)
     form = UpdateProfileForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -122,12 +130,12 @@ def change_profile():
                 current_user.username = form.new_username.data
                 flash("Your username has been updated successfully", "success")
             db.session.commit()
-            return redirect(url_for('profile'))
+            return redirect(url_for('profile', user_id=current_user.id))
     # set the value of the new username to the current username
     form.new_username.data = current_user.username
     image_f = url_for('static', filename='profile_pics/' + current_user.profile_image)
     return render_template("edit_profile.html", title="Edit Profile",
-                           profile_image=image_f, form=form, hide_side_bar=True)
+                           profile_image=image_f, form=form)
 
 
 @app.route("/post/new", methods=["GET", "POST"])
@@ -140,7 +148,17 @@ def new_post():
             db.session.add(post)
             db.session.commit()
             return redirect(url_for('home'))
-    return render_template("add_post.html", title="Add New Post", form=form)
+    return render_template("add_post.html", title="Add New Post", form=form, legend="Add New Post")
+
+
+@app.route("/post/<username>/<int:post_id>")
+def show_post(username, post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if post:
+        return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                               datetime=datetime, current_user=current_user)
+    else:
+        return about(404)
 
 
 @app.route("/delete_post/<int:post_id>")
@@ -149,5 +167,24 @@ def delete_post(post_id):
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
 def edit_post(post_id):
-    pass
+    # check if post exists or not
+    post = Post.query.get_or_404(post_id)
+    # check if a user is using the url to update someone else's post
+    if post.author != current_user:
+        abort(403)
+    # use the add post form to update the post
+    form = AddPostForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if post.title != form.title.data or post.content != form.content.data:
+                post.title = form.title.data
+                post.content = form.content.data
+                db.session.commit()
+                flash("Updated successfully", "success")
+            return redirect(url_for('show_post', username=post.author.username,
+                                    post_id=post.id))
+    form.title.data = post.title
+    form.content.data = post.content
+    return render_template("add_post.html", title="Update Post", form=form, legend="Update Post")
