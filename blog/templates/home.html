@@ -48,4 +48,18 @@
           </div>
         </article>
     {% endfor %}
+{#    create a loop for all post pages in the database#}
+    <div class="container-fluid mt-2 mb-3" style="margin-left:38%;">
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == posts.page %}
+                    <a href="{{ url_for('home', current_page=page_num) }}" class="btn btn-primary">{{ page_num }}</a>
+                {% else %}
+                    <a href="{{ url_for('home', current_page=page_num) }}" class="btn btn-outline-primary">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock %}
