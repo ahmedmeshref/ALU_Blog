@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for post in posts%}
+    {% for post in posts.items %}
         <article class="media content-section">
           <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
                alt="user_image" class="rounded-circle article-img mt-2">

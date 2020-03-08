@@ -13,7 +13,9 @@ from sqlalchemy import desc
 
 @app.route("/")
 def home():
-    posts = Post.query.order_by(desc(Post.date)).all()
+    # get the current page, and put a default value of 1
+    current_page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(desc(Post.date)).paginate(page=current_page, per_page=3)
     return render_template("home.html", posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            datetime=datetime, current_user=current_user)
 
