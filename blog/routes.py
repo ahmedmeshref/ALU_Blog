@@ -161,9 +161,18 @@ def show_post(username, post_id):
         return about(404)
 
 
-@app.route("/delete_post/<int:post_id>")
+@app.route("/post/<post_id>/delete/", methods=['GET', 'POST'])
+@login_required
 def delete_post(post_id):
-    pass
+    # check if post exists or not
+    post = Post.query.get_or_404(post_id)
+    # check if a user is using the url to update someone else's post
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash("Deleted Successfully", "success")
+    return redirect(url_for('home'))
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -178,6 +187,7 @@ def edit_post(post_id):
     form = AddPostForm()
     if request.method == 'POST':
         if form.validate_on_submit():
+            # check if the user updated any data
             if post.title != form.title.data or post.content != form.content.data:
                 post.title = form.title.data
                 post.content = form.content.data
