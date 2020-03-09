@@ -30,7 +30,7 @@
               {% if post.author == current_user %}
                     <div class="container">
                       <button class="btn btn-outline-primary mb-1 mt-0" data-toggle="dropdown"
-                              style="font-size: 13px; padding: 0px; width: 25px;">≡</button>
+                              style="font-size: 13px; padding: 0px; width: 25px; font-weight: bold;">≡</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="btn btn-primary dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit</a>
                             <button type="button" class="btn btn-danger dropdown-item" data-toggle="modal" data-target="#deleteModel">

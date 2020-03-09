@@ -12,6 +12,7 @@ from sqlalchemy import desc
 
 
 @app.route("/")
+@login_required
 def home():
     # get the current page, and put a default value of 1
     current_page = request.args.get('current_page', 1, type=int)
@@ -64,6 +65,7 @@ def login():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("home"))
@@ -108,9 +110,10 @@ def save_picture(new_picture):
 def delete_current_picture():
     picture_file = current_user.profile_image
     # join the path of the current user's profile picture
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_file)
-    # delete the picture
-    os.remove(picture_path)
+    if picture_file != "profile.png":
+        picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_file)
+        # delete the picture
+        os.remove(picture_path)
 
 
 @app.route("/profile/<user_id>/update_profile", methods=['POST', 'GET'])

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
@@ -17,7 +17,9 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='logo.png')}}" alt="ALU" height="20px"></a>
+          <a class="navbar-brand mr-4" href="{{ url_for('home') }}">
+              <img src="{{ url_for('static', filename='logo.png')}}" alt="ALU" height="20px">
+          </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -29,9 +31,20 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">Post</a>
-                <a class="nav-item nav-link" href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+
+                  <div class="dropdown" style="display: flex;">
+                  <button class="btn btn-outline-light" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                  style="padding: 1px">
+                      <img class="rounded-circle account-img" style="padding: 0; margin: 0; max-width: 35%;
+                        height: 35%; border: 2px white solid;" src="{{ url_for('static', filename='profile_pics/'
+                        + current_user.profile_image) }}" alt="user_pic">
+                  </button>
+                    <div class="dropdown-menu text-center small">
+                        <a class="btn btn-primary dropdown-item" href="{{ url_for('new_post') }}">Post</a>
+                        <a class="btn btn-primary dropdown-item" href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
+                        <a class="btn btn-danger dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                  </div>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
