@@ -79,9 +79,14 @@ def profile(user_id):
     same_user = True
     if user != current_user:
         same_user = False
+    # send the user posts
+    current_page = request.args.get('current_page', 1, type=int)
+    posts = Post.query.filter_by(author=user).order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
     image_f = url_for('static', filename='profile_pics/' + user.profile_image)
-    return render_template("profile.html", title=f"profile - {current_user.username}",
-                           profile_image=image_f, change_profile=same_user)
+    return render_template("profile.html", title=f"profile - {user.username}",
+                           profile_image=image_f, change_profile=same_user,
+                           posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                           datetime=datetime, user=user)
 
 
 def save_picture(new_picture):

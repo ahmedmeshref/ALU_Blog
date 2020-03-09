@@ -6,8 +6,8 @@
       <div class="media">
         <img class="rounded-circle account-img" src="{{ profile_image }}">
         <div class="media-body">
-          <h2 class="account-heading mt-4">{{ current_user.username }}</h2>
-          <p class="text-secondary">{{ current_user.email }}</p>
+          <h2 class="account-heading mt-4">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
           {% if change_profile %}
               <form method="POST" action="">
                  <button class="btn btn-outline-primary">Update Profile</button>
@@ -17,5 +17,68 @@
       </div>
       {% block change_username %}
       {% endblock %}
+    </div>
+    <div class="container-fluid">
+        {% for post in posts.items %}
+            <article class="media content-section">
+              <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
+                   alt="user_image" class="rounded-circle article-img mt-2">
+              <div class="media-body">
+                  <div class="container article-metadata mt-1">
+                      <div class="row">
+                        <div class="col-sm">
+                           <a class="mr-2" href="{{ url_for('profile', user_id=post.author.id) }}">{{ post.author.username }}</a>
+                           <small class="text-muted">
+                              {% set time_diff = datetime.strptime(now, "%Y-%m-%d %H:%M:%S") -
+                              datetime.strptime(post.date.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S") %}
+                              {% if time_diff.days//7 %}
+                                {{ time_diff.days//7 }} weeks ago
+                              {% elif time_diff.days %}
+                                {{ time_diff.days }} days ago
+                              {% elif time_diff.seconds//3600 %}
+                                {{ time_diff.seconds // 3600 }} hours ago
+                              {% elif time_diff.seconds//60 %}
+                                {{ time_diff.seconds // 60 }} minutes ago
+                              {% else %}
+                                1 minute ago
+                              {% endif %}
+                          </small>
+                        </div>
+                        <div class=".col-sm-">
+                          {% if post.author == current_user %}
+                                <div class="container">
+                                  <button class="btn btn-outline-primary mb-1 mt-0" data-toggle="dropdown"
+                                          style="font-size: 13px; padding: 0px; width: 25px;">≡</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="btn btn-primary dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit</a>
+                                        <a class="btn btn-danger dropdown-item" href="{{ url_for('delete_post', post_id=post.id) }}">
+                                          Delete
+                                        </a>
+                                    </div>
+                                </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                  </div>
+                <h2><a class="article-title" href="{{ url_for('show_post', username=post.author.username, post_id=post.id) }}">
+                    {{ post.title }}</a></h2>
+                <p class="article-content text-dark">{{ post.content }}</p>
+              </div>
+            </article>
+        {% endfor %}
+    {#    create a loop for all post pages in the database#}
+        <div class="mt-2 mb-3">
+            {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == posts.page %}
+                        <a href="{{ url_for('home', current_page=page_num) }}" class="btn btn-primary">{{ page_num }}</a>
+                    {% else %}
+                        <a href="{{ url_for('home', current_page=page_num) }}" class="btn btn-outline-primary">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

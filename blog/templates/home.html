@@ -49,7 +49,7 @@
         </article>
     {% endfor %}
 {#    create a loop for all post pages in the database#}
-    <div class="container-fluid mt-2 mb-3" style="margin-left:38%;">
+    <div class="container-fluid mt-2 mb-3" style="position: center">
         {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if page_num == posts.page %}

@@ -1,6 +1,21 @@
-{% extends 'base.html' and 'profile.html' %}
+{% extends 'base.html' %}
 
-{% block change_username %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ profile_image }}">
+        <div class="media-body">
+          <h2 class="account-heading mt-4">{{ current_user.username }}</h2>
+          <p class="text-secondary">{{ current_user.email }}</p>
+          {% if change_profile %}
+              <form method="POST" action="">
+                 <button class="btn btn-outline-primary">Update Profile</button>
+              </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
     <form action="" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <fieldset class="form-group ">
