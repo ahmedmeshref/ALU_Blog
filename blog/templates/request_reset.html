@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-section text-dark">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group ">
+            <legend class="border-bottom mb-4 text-lg">Reset Your Password</legend>
+            <p class="text-muted">
+                Please provide the email address you used when you signed up for your ALU_Blog account.
+            </p>
+            <div class="form-group">
+                {{ form.email.label(class='form-control-label') }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                        <span>{{ error }} </span>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

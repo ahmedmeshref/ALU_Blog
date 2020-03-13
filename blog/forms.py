@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(), Length(min=5, max=50)])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
+    submit = SubmitField('SIGN UP')
 
     # check if the email already exist
     def validate_email(self, email):
@@ -31,7 +31,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    submit = SubmitField('SIGN IN')
 
 
 class UpdateProfileForm(FlaskForm):
@@ -40,7 +40,7 @@ class UpdateProfileForm(FlaskForm):
     """
     new_username = StringField('New Username', validators=[DataRequired(), Length(min=2, max=20)])
     new_picture = FileField("Update Profile Picture", validators=[FileAllowed(['jpg', 'jpeg ', 'png'])])
-    submit = SubmitField('Save Changes')
+    submit = SubmitField('SAVE CHANGES')
 
     def validate_new_username(self, new_username):
         # check if the new username is different from the current
@@ -58,5 +58,25 @@ class AddPostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=2, max=50)])
     content = TextAreaField("Content", validators=[DataRequired(), Length(min=10, max=500)],
                             render_kw={"placeholder": "What new at ALU?"})
-    submit = SubmitField("Post")
+    submit = SubmitField("POST")
+
+
+class RequestResetPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('SEND EMAIL')
+
+    # check if the email doesn't exist
+    def validate_email(self, email):
+        email_exist = User.query.filter_by(email=email.data).first()
+        if not email_exist:
+            raise ValidationError('Email is not Registered! Please create an account!')
+
+
+class ResetPasswordForm(FlaskForm):
+    """
+    form for reseting the user password
+    """
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('RESET PASSWORD')
 

@@ -15,7 +15,7 @@
 </head>
 <body>
     <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" >
         <div class="container">
           <a class="navbar-brand mr-4" href="{{ url_for('home') }}">
               <img src="{{ url_for('static', filename='logo.png')}}" alt="ALU" height="20px">
@@ -34,7 +34,7 @@
 
                   <div class="dropdown" style="display: flex;">
                   <button class="btn btn-outline-light" type="button" id="dropdownMenu2" data-toggle="dropdown"
-                  style="padding: 1px">
+                  style="padding: 1px; border: 0">
                       <img class="rounded-circle account-img" style="padding: 0; margin: 0; max-width: 35%;
                         height: 35%; border: 2px white solid;" src="{{ url_for('static', filename='profile_pics/'
                         + current_user.profile_image) }}" alt="user_pic">

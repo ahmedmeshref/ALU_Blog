@@ -1,7 +1,7 @@
 from datetime import datetime
-from blog import db, login_manager
+from blog import app, db, login_manager
 from flask_login import UserMixin
-
+from itsdangerous import TimedJSONWebSignatureSerializer as ts
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -20,6 +20,29 @@ class User(db.Model, UserMixin):
     # one to many relationship between the user (author) and the posts
     # give a ref to Post class
     posts = db.relationship('Post', backref='author', lazy=True)
+
+    def reset_password_token(self, active_sec=3600):
+        """
+        create token creates in a random token for resting the users password
+        """
+        # create an instance of the ts model and set an expiration time
+        s = ts(app.config['SECRET_KEY'], active_sec)
+        # create a token with a user id with a payload
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    # verify_reset_password_token is a static function that doesn't accept
+    # self variable
+    @staticmethod
+    def verify_reset_password_token(token):
+        """
+        verify if it is the same user, using his id
+        """
+        s = ts(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.profile_image}')"
