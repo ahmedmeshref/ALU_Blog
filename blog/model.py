@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    profile_image = db.Column(db.String(20), nullable=False, default='profile.png')
+    profile_image = db.Column(db.String(20), nullable=False, default='my_profile.png')
     email = db.Column(db.String(50), unique=True, nullable=False)
     # we hash the user password to a 60 string long
     password = db.Column(db.String(60), nullable=False)

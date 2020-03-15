@@ -42,8 +42,7 @@
             </div>
           </div>
       </div>
-    <h2><a class="article-title" href="{{ url_for('show_post', username=post.author.username, post_id=post.id) }}">
-        {{ post.title }}</a></h2>
+    <h2>{{ post.title }}</h2>
     <p class="article-content text-dark">{{ post.content }}</p>
   </div>
 </article>

@@ -22,7 +22,7 @@
                           {% elif time_diff.seconds//60 %}
                             {{ time_diff.seconds // 60 }} minutes ago
                           {% else %}
-                            1 minute ago
+                            {{ time_diff.seconds // 60 }} seconds ago
                           {% endif %}
                       </small>
                     </div>
