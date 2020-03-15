@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from blog.model import User
@@ -49,16 +49,6 @@ class UpdateProfileForm(FlaskForm):
             username_exist = User.query.filter_by(username=new_username.data).first()
             if username_exist:
                 raise ValidationError('username is already taken!')
-
-
-class AddPostForm(FlaskForm):
-    """
-    form for adding new posts
-    """
-    title = StringField("Title", validators=[DataRequired(), Length(min=2, max=50)])
-    content = TextAreaField("Content", validators=[DataRequired(), Length(min=10, max=500)],
-                            render_kw={"placeholder": "What new at ALU?"})
-    submit = SubmitField("POST")
 
 
 class RequestResetPasswordForm(FlaskForm):

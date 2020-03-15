@@ -9,7 +9,7 @@ bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = '472267410d1672db337b9e9ca710ee1b'
 login_manager = LoginManager(app)
 # set the login route when the app tries to access login_required
-login_manager.login_view = 'login'
+login_manager.login_view = 'users.login'
 # set a category info to give the login message style
 login_manager.login_message_category = 'info'
 # set the email address details
@@ -36,4 +36,10 @@ db = SQLAlchemy(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # call all the routes to run after initializing db and app
-from blog import routes
+from blog.users.routes import users
+from blog.posts.routes import posts
+from blog.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)
