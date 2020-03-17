@@ -27,7 +27,7 @@ def save_picture(new_picture):
 def delete_current_picture():
     picture_file = current_user.profile_image
     # join the path of the current user's profile picture
-    if picture_file != "profile.png":
+    if picture_file != "my_profile.png":
         picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_file)
         # delete the picture
         os.remove(picture_path)
