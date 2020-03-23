@@ -9,9 +9,14 @@
           <h2 class="account-heading mt-4">{{ user.username }}</h2>
           <p class="text-secondary">{{ user.email }}</p>
           {% if change_profile %}
-              <form method="POST" action="">
-                 <button class="btn btn-outline-primary">Update Profile</button>
-              </form>
+              <div style="display: flex;">
+                  <form method="POST" action="">
+                     <button class="btn btn-outline-primary mr-1">Update Profile</button>
+                  </form>
+                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
+                      Delete Account
+                  </button>
+              </div>
           {% endif %}
         </div>
       </div>
@@ -70,7 +75,7 @@
               </div>
             </article>
         {% endfor %}
-    {#    create a loop for all post pages in the database#}
+        {#create a loop for all post pages in the database#}
         <div class="mt-2 mb-3">
             {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                 {% if page_num %}
@@ -84,5 +89,28 @@
                 {% endif %}
             {% endfor %}
         </div>
+    </div>
+
+    {#delete profile model#}
+    <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteUserLabel">Delete Your Account?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            You won't have access to your account data anymore.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form method="POST" action="{{ url_for('users.delete_user', user_id = current_user.id) }}">
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock %}

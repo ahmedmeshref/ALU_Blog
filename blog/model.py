@@ -17,6 +17,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     # we hash the user password to a 60 string long
     password = db.Column(db.String(60), nullable=False)
+    # activation state
+    active = db.Column(db.String(10), nullable=False, default=True)
     # one to many relationship between the user (author) and the posts
     # give a ref to Post class
     posts = db.relationship('Post', backref='author', lazy=True)

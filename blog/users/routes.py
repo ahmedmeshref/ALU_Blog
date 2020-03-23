@@ -36,16 +36,19 @@ def login():
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            correct_email = User.query.filter_by(email=form.email.data).first()
-            if correct_email and bcrypt.check_password_hash(correct_email.password, form.password.data):
-                login_user(correct_email, remember=form.remember_me.data)
-                # get the next page if the user have tried to access any and was
-                # redirected to login first
-                next_page = request.args.get('next')
-                flash("Logged in successfully", 'success')
-                if next_page:
-                    return redirect(next_page)
-                return redirect(url_for("main.home"))
+            existing_user = User.query.filter_by(email=form.email.data).first()
+            if existing_user and bcrypt.check_password_hash(existing_user.password, form.password.data):
+                if existing_user.active != "false":
+                    login_user(existing_user, remember=form.remember_me.data)
+                    # get the next page if the user have tried to access any and was
+                    # redirected to login first
+                    next_page = request.args.get('next')
+                    flash("Logged in successfully", 'success')
+                    if next_page:
+                        return redirect(next_page)
+                    return redirect(url_for("main.home"))
+                else:
+                    flash("Your account has been deactivated.", "info")
             else:
                 flash("incorrect email or password!", "danger")
     return render_template("login.html", title='Login', form=form)
@@ -141,3 +144,20 @@ def reset_password(token):
             flash(f"Password updated successfully", 'success')
             return redirect(url_for("main.login"))
     return render_template("reset_password.html", title="Create New Password", form=form)
+
+
+@users.route('/profile/<user_id>/delete_user/', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    # check if user exists or not
+    user = User.query.get_or_404(user_id)
+    # check if a user is using the url to update someone else's post
+    if user != current_user:
+        abort(403)
+    current_user.active = False
+    delete_current_picture()
+    current_user.profile_image = "in_active.png"
+    db.session.commit()
+    flash("Profile Deleted Successfully", "success")
+    return redirect(url_for('users.logout'))
+

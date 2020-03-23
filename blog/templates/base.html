@@ -29,10 +29,23 @@
               <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
             </div>
-            <!-- Navbar Right Side -->
+          <!-- Navbar Right Side -->
+            <div class="search-bar mr-1" style="display: flex">
+              <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+              <form action="{{ url_for('main.search') }}" method="POST">
+                  <button type="submit" class="btn btn-light">
+                    search
+                  </button>
+              </form>
+
+
+
+
+
+
+            </div>
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-
                   <div class="dropdown" style="display: flex;">
                   <button class="btn btn-outline-light" type="button" id="dropdownMenu2" data-toggle="dropdown"
                   style="padding: 1px; border: 0">

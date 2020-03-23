@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid" style="text-align:center; font-weight: inherit">
+        <h1 style="font-size: 140px; color: #002E6D">500</h1>
         <h1>Server Error</h1>
-        <p>Please try later</p>
+        <p>
+            Please try later!
+        </p>
+        <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary" role="button">  Home  </a>
     </div>
 {% endblock %}

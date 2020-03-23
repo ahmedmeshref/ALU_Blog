@@ -21,3 +21,8 @@ def home():
 @main.route("/about")
 def about():
     return render_template("about.html", title='about')
+
+
+@main.route('/search/<search_text>')
+def search(search_text):
+
