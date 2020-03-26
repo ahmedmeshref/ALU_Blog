@@ -2,7 +2,6 @@ from flask import render_template, url_for, request, flash, redirect, abort
 from blog import db
 from blog.posts.forms import AddPostForm
 from blog.main.forms import SearchForm
-
 from blog.model import Post
 from flask_login import current_user, login_required
 from datetime import datetime
@@ -17,6 +16,8 @@ def new_post():
     search_form = SearchForm()
     form = AddPostForm()
     if request.method == 'POST':
+        if search_form.search.data:
+            return redirect(url_for('main.search', search_text=search_form.search.data))
         if form.validate_on_submit():
             post = Post(title=form.title.data, content=form.content.data, author=current_user)
             db.session.add(post)
@@ -26,15 +27,18 @@ def new_post():
                            legend="Add New Post", search_form=search_form)
 
 
-@posts.route("/post/<username>/<int:post_id>")
+@posts.route("/post/<username>/<int:post_id>", methods=['GET', 'POST'])
 def show_post(username, post_id):
     search_form = SearchForm()
-    post = Post.query.filter_by(id=post_id).first()
-    if post:
-        return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                               datetime=datetime, current_user=current_user, search_form=search_form)
+    if request.method == "POST" and search_form.search.data:
+        return redirect(url_for('main.search', search_text=search_form.search.data))
     else:
-        return abort(404)
+        post = Post.query.filter_by(id=post_id).first()
+        if post:
+            return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                   datetime=datetime, current_user=current_user, search_form=search_form)
+        else:
+            return abort(404)
 
 
 @posts.route("/post/<post_id>/delete/", methods=['GET', 'POST'])
@@ -63,6 +67,8 @@ def edit_post(post_id):
     # use the add post form to update the post
     form = AddPostForm()
     if request.method == 'POST':
+        if search_form.search.data:
+            return redirect(url_for('main.search', search_text=search_form.search.data))
         if form.validate_on_submit():
             # check if the user updated any data
             if post.title != form.title.data or post.content != form.content.data:

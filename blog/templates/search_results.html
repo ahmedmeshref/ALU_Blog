@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <h3>All Users</h3>
+    {% if users %}
+        {% for user in users %}
+            <article class="media content-section">
+                <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) }}"
+                     alt="user_image" class="rounded-circle article-img mt-2">
+                <h2 class="mt-4 mb-4 ml-4">
+                    <a href="{{ url_for('users.profile', user_id=user.id) }}">
+                        {{ user.username }}
+                    </a>
+                </h2>
+            </article>
+        {% endfor %}
+    {% else %}
+        <article class="media content-section">
+            <h4 class="text-muted center">No users found</h4>
+        </article>
+    {% endif %}
+    <h3 class="text-muted">All Posts</h3>
+    {% if posts %}
+        {% for post in posts %}
+            <article class="media content-section">
+                <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
+                     alt="user_image" class="rounded-circle article-img mt-2">
+                <div class="media-body">
+                    <div class="container article-metadata mt-1">
+                        <div class="row">
+                            <div class="col-sm">
+                                <a class="mr-2" href="{{ url_for('users.profile', user_id=post.author.id) }}">
+                                    {{ post.author.username }}
+                                </a>
+                                <small class="text-muted">
+                                    {% set time_diff = datetime.strptime(now, "%Y-%m-%d %H:%M:%S") -
+                      datetime.strptime(post.date.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S") %}
+                                    {% if time_diff.days//7 %}
+                                        {{ time_diff.days//7 }} weeks ago
+                                    {% elif time_diff.days %}
+                                        {{ time_diff.days }} days ago
+                                    {% elif time_diff.seconds//3600 %}
+                                        {{ time_diff.seconds // 3600 }} hours ago
+                                    {% elif time_diff.seconds//60 %}
+                                        {{ time_diff.seconds // 60 }} minutes ago
+                                    {% else %}
+                                        {{ time_diff.seconds }} seconds ago
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <div class=".col-sm-">
+                                {% if post.author == current_user %}
+                                    <div class="container">
+                                        <button class="btn btn-outline-primary mb-1 mt-0" data-toggle="dropdown"
+                                                style="font-size: 13px; padding: 0px; width: 25px; font-weight: bold;">≡
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="btn btn-primary dropdown-item"
+                                               href="{{ url_for('posts.edit_post', post_id=post.id) }}">Edit</a>
+                                            <button type="button" class="btn btn-danger dropdown-item"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteModel">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <h2>{{ post.title }}</h2>
+                    <p class="article-content text-dark">{{ post.content }}</p>
+                </div>
+            </article>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModelLabel">Delete Post</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                                <input type="submit" class="btn btn-outline-danger" value="Save changes">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <article class="media content-section">
+            <h4 class="text-muted center">No posts found</h4>
+        </article>
+    {% endif %}
+{% endblock %}

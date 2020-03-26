@@ -69,6 +69,8 @@ def profile(user_id):
     # check if the current user is viewing his own profile or someone else's
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
+        if search_form.search.data:
+            return redirect(url_for('main.search', search_text=search_form.search.data))
         return redirect(url_for('users.change_profile', user_id=user.id))
     same_user = True
     if user != current_user:
@@ -95,6 +97,8 @@ def change_profile(user_id):
         abort(403)
     form = UpdateProfileForm()
     if request.method == 'POST':
+        if search_form.search.data:
+            return redirect(url_for('main.search', search_text=search_form.search.data))
         if form.validate_on_submit():
             if form.new_picture.data:
                 # delete the current picture from the profile_pics file locally
