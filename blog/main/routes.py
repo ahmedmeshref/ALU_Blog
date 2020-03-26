@@ -3,19 +3,21 @@ from blog.model import Post
 from flask_login import current_user, login_required
 from datetime import datetime
 from sqlalchemy import desc
-from flask import Blueprint
+from flask import Blueprint, url_for, redirect, request
+from blog.main.forms import SearchForm
 
 main = Blueprint('main', __name__)
 
 
-@main.route("/")
+@main.route("/home")
 @login_required
 def home():
     # get the current page, and put a default value of 1
+    search_form = SearchForm()
     current_page = request.args.get('current_page', 1, type=int)
     posts = Post.query.order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
     return render_template("home.html", posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime, current_user=current_user)
+                           datetime=datetime, current_user=current_user, search_form=search_form)
 
 
 @main.route("/about")
@@ -23,6 +25,11 @@ def about():
     return render_template("about.html", title='about')
 
 
-@main.route('/search/<search_text>')
-def search(search_text):
+@main.route('/search/', methods=['POST'])
+def search():
+    return redirect(url_for("main.home"))
+
+
+
+
 

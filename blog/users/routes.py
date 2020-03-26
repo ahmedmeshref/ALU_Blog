@@ -2,6 +2,7 @@ from flask import render_template, url_for, request, flash, redirect, abort
 from blog import db, bcrypt
 from blog.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
                               RequestResetPasswordForm, ResetPasswordForm)
+from blog.main.forms import SearchForm
 from blog.model import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -29,7 +30,7 @@ def register():
     return render_template("register.html", title='Register', form=form)
 
 
-@users.route("/login", methods=['GET', 'POST'])
+@users.route("/", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
@@ -64,6 +65,7 @@ def logout():
 @users.route("/profile/<user_id>", methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
+    search_form = SearchForm()
     # check if the current user is viewing his own profile or someone else's
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
@@ -78,12 +80,13 @@ def profile(user_id):
     return render_template("profile.html", title=f"profile - {user.username}",
                            profile_image=image_f, change_profile=same_user,
                            posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime, user=user)
+                           datetime=datetime, user=user, search_form= search_form)
 
 
 @users.route("/profile/<user_id>/update_profile", methods=['POST', 'GET'])
 @login_required
 def change_profile(user_id):
+    search_form = SearchForm()
     # check if the given user_id exist
     user = User.query.get_or_404(user_id)
     # check if the request was made by the account user
@@ -110,7 +113,7 @@ def change_profile(user_id):
     form.new_username.data = current_user.username
     image_f = url_for('static', filename='profile_pics/' + current_user.profile_image)
     return render_template("edit_profile.html", title="Edit Profile",
-                           profile_image=image_f, form=form)
+                           profile_image=image_f, form=form, search_form=search_form)
 
 
 @users.route("/reset_password_email", methods=['GET', 'POST'])

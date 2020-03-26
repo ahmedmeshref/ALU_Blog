@@ -135,3 +135,10 @@ a.article-title:hover {
   }
 }
 
+
+#search_bar {
+     width: 100px;
+     height: 0;
+     max-width: 50px;
+    max-height: 10px;
+}

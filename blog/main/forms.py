@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from blog.model import User
-from flask_login import current_user
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+
+
+class SearchForm(FlaskForm):
+    search = StringField('search', validators=[DataRequired()], render_kw={"placeholder": "Search"})
+    submit = SubmitField('Search')
