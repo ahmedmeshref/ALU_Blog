@@ -8,6 +8,12 @@ from blog.model import Post, User
 main = Blueprint('main', __name__)
 
 
+@main.route("/")
+def index():
+    # start the journey from by login
+    return redirect(url_for("users.login"))
+
+
 @main.route("/home", methods=['GET', 'POST'])
 @login_required
 def home():
@@ -26,10 +32,10 @@ def about():
     return render_template("about.html", title='about')
 
 
-@main.route('/search/<search_text>', methods=['GEt', 'POST'])
+@main.route('/search/<search_text>', methods=['GET', 'POST'])
 def search(search_text):
-    users = User.query.filter_by(username=search_text.title()).all()
-    posts = Post.query.filter_by(title=search_text)
+    users = User.query.filter(User.username.ilike(f"%{search_text}%")).all()
+    posts = Post.query.filter(Post.title.ilike(f"%{search_text}%")).all()
     return render_template("search_results.html", users=users, posts=posts,
                            now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            datetime=datetime, current_user=current_user)

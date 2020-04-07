@@ -30,11 +30,14 @@ def register():
     return render_template("register.html", title='Register', form=form)
 
 
-@users.route("/", methods=['GET', 'POST'])
+@users.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
     form = LoginForm()
+    # get any args that might be send with a get request to the login route since the user needs to login before
+    # accessing any other method
+    next_page = request.args.get('next')
     if request.method == 'POST':
         if form.validate_on_submit():
             existing_user = User.query.filter_by(email=form.email.data).first()
@@ -43,7 +46,6 @@ def login():
                     login_user(existing_user, remember=form.remember_me.data)
                     # get the next page if the user have tried to access any and was
                     # redirected to login first
-                    next_page = request.args.get('next')
                     flash("Logged in successfully", 'success')
                     if next_page:
                         return redirect(next_page)
