@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main_style.css') }}">
     <link rel="icon" sizes="64x64" href="{{ url_for('static', filename='icon/favicon_.ico') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
@@ -31,13 +32,10 @@
             </div>
             <!-- Navbar Right Side -->
             {% if search_form %}
-                <div class="navbar-nav mr-3" >
-                  <form action="" method="POST"
-                        style="display:flex;">
-                      {{ search_form.search(maxlength=50, class="form-control form-control-lg")}}
-                      {{ search_form.submit(class="btn btn-outline-light") }}
-                  </form>
-                </div>
+                <form class="search_bar" action="">
+                  <input type="text" placeholder="Search.." name="search">
+                  <button type="submit" class="search_button"><i class="fa fa-search"></i></button>
+                </form>
             {% endif %}
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}

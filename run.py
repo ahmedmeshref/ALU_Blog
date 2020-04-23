@@ -9,7 +9,6 @@ if __name__ == "__main__":
 """
 TODO:
 1- Search bar doesn't appear everywhere
-2- Logo
 3- Admin side to delete both users and all posts
 
 
