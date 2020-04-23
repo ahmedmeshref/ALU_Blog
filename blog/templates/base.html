@@ -31,13 +31,15 @@
               <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
             </div>
             <!-- Navigation bar -->
-            <form class="form-inline mr-4" id="search_form">
-                <div class="form-group">
-                  <input class="form-control mr-1" type="text" placeholder="Search.." id="search_value"
-                         name="search_value" required>
-                  <button class="btn btn-outline-light" type="submit"><i class="fa fa-search"></i></button>
-                </div>
-            </form>
+            {% if current_user.is_authenticated %}
+                <form class="form-inline mr-4" id="search_form" method="POST" action="{{ url_for('main.search') }}">
+                    <div class="form-group">
+                      <input class="form-control mr-1" type="text" placeholder="Search.." id="search_value"
+                             name="search_value" required>
+                      <button class="btn btn-outline-light" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            {% endif %}
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
                   <div class="dropdown">
@@ -88,23 +90,23 @@
         </div>
       </div>
     </main>
-    <script>
-        document.getElementById('search_form').onsubmit = function (e){
-            e.preventDefault();
-            const search_text = document.getElementById('search_value').value;
-            console.log(search_text);
-            fetch("/search", {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "text": search_text
-                })
-            })
-            .catch((e) => console.log(e.message))
-        }
-    </script>
+{#    <script>#}
+{#        document.getElementById('search_form').onsubmit = function (e){#}
+{#            e.preventDefault();#}
+{#            const search_text = document.getElementById('search_value').value;#}
+{#            console.log(search_text);#}
+{#            return fetch("/search", {#}
+{#                method: 'POST',#}
+{#                headers: {#}
+{#                    'Content-type': 'application/json'#}
+{#                },#}
+{#                body: JSON.stringify({#}
+{#                    "text": search_text#}
+{#                })#}
+{#            })#}
+{#            .catch((e) => console.log(e.message))#}
+{#        }#}
+{#    </script>#}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

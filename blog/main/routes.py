@@ -28,13 +28,12 @@ def about():
     return render_template("about.html", title='about')
 
 
-@main.route('/search', methods=['POST'])
+@main.route('/results/', methods=['POST'])
 @login_required
 def search():
-    # search_text = request.get_json()['text']
-    # users = User.query.filter(User.username.ilike(f"%{search_text}%")).all()
-    # posts = Post.query.filter(Post.title.ilike(f"%{search_text}%")).all()
-    return redirect(url_for('main.about'))
-    # return render_template("search_results.html", users=users, posts=posts,
-    #                        now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    #                        datetime=datetime, current_user=current_user)
+    search_text = request.form['search_value']
+    users = User.query.filter(User.username.ilike(f"%{search_text}%")).all()
+    posts = Post.query.filter(Post.title.ilike(f"%{search_text}%")).all()
+    return render_template("search_results.html", users=users, posts=posts,
+                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                           datetime=datetime, current_user=current_user)
