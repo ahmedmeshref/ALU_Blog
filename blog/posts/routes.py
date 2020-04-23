@@ -1,7 +1,6 @@
 from flask import render_template, url_for, request, flash, redirect, abort
 from blog import db
 from blog.posts.forms import AddPostForm
-from blog.main.forms import SearchForm
 from blog.model import Post
 from flask_login import current_user, login_required
 from datetime import datetime
@@ -13,32 +12,25 @@ posts = Blueprint('posts', __name__)
 @posts.route("/post/new", methods=["GET", "POST"])
 @login_required
 def new_post():
-    search_form = SearchForm()
     form = AddPostForm()
     if request.method == 'POST':
-        if search_form.search.data:
-            return redirect(url_for('main.search', search_text=search_form.search.data))
         if form.validate_on_submit():
             post = Post(title=form.title.data, content=form.content.data, author=current_user)
             db.session.add(post)
             db.session.commit()
             return redirect(url_for('main.home'))
     return render_template("add_post.html", title="Add New Post", form=form,
-                           legend="Add New Post", search_form=search_form)
+                           legend="Add New Post")
 
 
-@posts.route("/post/<username>/<int:post_id>", methods=['GET', 'POST'])
+@posts.route("/post/<username>/<int:post_id>")
 def show_post(username, post_id):
-    search_form = SearchForm()
-    if request.method == "POST" and search_form.search.data:
-        return redirect(url_for('main.search', search_text=search_form.search.data))
+    post = Post.query.filter_by(id=post_id).first()
+    if post:
+        return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                               datetime=datetime, current_user=current_user)
     else:
-        post = Post.query.filter_by(id=post_id).first()
-        if post:
-            return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                   datetime=datetime, current_user=current_user, search_form=search_form)
-        else:
-            return abort(404)
+        return abort(404)
 
 
 @posts.route("/post/<post_id>/delete/", methods=['GET', 'POST'])
@@ -58,7 +50,6 @@ def delete_post(post_id):
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
-    search_form = SearchForm()
     # check if post exists or not
     post = Post.query.get_or_404(post_id)
     # check if a user is using the url to update someone else's post
@@ -67,8 +58,6 @@ def edit_post(post_id):
     # use the add post form to update the post
     form = AddPostForm()
     if request.method == 'POST':
-        if search_form.search.data:
-            return redirect(url_for('main.search', search_text=search_form.search.data))
         if form.validate_on_submit():
             # check if the user updated any data
             if post.title != form.title.data or post.content != form.content.data:
@@ -81,4 +70,4 @@ def edit_post(post_id):
     form.title.data = post.title
     form.content.data = post.content
     return render_template("add_post.html", title="Update Post", form=form,
-                           legend="Update Post", search_form=search_form)
+                           legend="Update Post")

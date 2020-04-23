@@ -79,8 +79,10 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
+.search_bar {
+  display: flex;
+}
 
-/* style the search form */
-.search_button{
-  width: 1000px;
+.search_area {
+  width: 20px;
 }
