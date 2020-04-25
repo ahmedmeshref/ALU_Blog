@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 {{ form.new_picture.label }}
-                {{ form.new_picture(class="form-control-file  btn btn-outline-light") }}
+                {{ form.new_picture(class="form-control-file  btn btn-light") }}
                 {% if form.new_picture.errors %}
                         {% for error in form.new_picture.errors %}
                             <span class="text-danger">{{ error }} </span>

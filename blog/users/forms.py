@@ -10,7 +10,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email(), Length(min=5, max=50)])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=50)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('SIGN UP')
 
@@ -25,6 +25,10 @@ class RegistrationForm(FlaskForm):
         username_exist = User.query.filter_by(username=username.data).first()
         if username_exist:
             raise ValidationError('username is already taken!')
+        unvalid_chars = ["@", "&", "'", "(", ")", "<", ">", '"']
+        for char in unvalid_chars:
+            if char in username.data:
+                raise ValidationError(f"username can't include {char}")
 
 
 class LoginForm(FlaskForm):
