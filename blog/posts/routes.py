@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, flash, redirect, abort
+from flask import render_template, url_for, request, flash, redirect, abort, jsonify
 from blog import db
 from blog.posts.forms import AddPostForm
 from blog.model import Post
@@ -9,18 +9,19 @@ from flask import Blueprint
 posts = Blueprint('posts', __name__)
 
 
-@posts.route("/post/new", methods=["GET", "POST"])
+@posts.route("/new_post/", methods=["POST"])
 @login_required
 def new_post():
-    form = AddPostForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            post = Post(title=form.title.data, content=form.content.data, author=current_user)
-            db.session.add(post)
-            db.session.commit()
-            return redirect(url_for('main.home'))
-    return render_template("add_post.html", title="Add New Post", form=form,
-                           legend="Add New Post")
+    title = request.get_json()['title']
+    description = request.get_json()['description']
+    error = False
+    data = {}
+    new_post = Post(title=title, content=description, author=current_user)
+    db.session.add(new_post)
+    db.session.commit()
+    data['description'] = description
+    data['title'] = title
+    return jsonify(data)
 
 
 @posts.route("/post/<username>/<int:post_id>")

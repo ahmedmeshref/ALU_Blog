@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from datetime import datetime
 from sqlalchemy import desc
 from blog.model import Post, User
+from time import ctime
 
 main = Blueprint('main', __name__)
 
@@ -20,7 +21,7 @@ def home():
     current_page = request.args.get('current_page', 1, type=int)
     posts = Post.query.order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
     return render_template("home.html", posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime, current_user=current_user)
+                           datetime=datetime, current_user=current_user, time=ctime())
 
 
 @main.route("/about")
