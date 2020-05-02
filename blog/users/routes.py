@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, flash, redirect, abort
+from flask import render_template, url_for, request, flash, redirect, abort, Blueprint
 from blog import db, bcrypt
 from blog.users.forms import (RegistrationForm, LoginForm, UpdateProfileForm,
                               RequestResetPasswordForm, ResetPasswordForm)
@@ -6,7 +6,6 @@ from blog.model import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
 from sqlalchemy import desc
-from flask import Blueprint
 from blog.users.utiles import send_reset_email, save_picture, delete_current_picture
 
 
