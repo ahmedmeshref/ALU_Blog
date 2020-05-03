@@ -33,7 +33,7 @@ def about():
 @login_required
 def search():
     search_text = request.form['search_value']
-    users = User.query.filter(User.username.ilike(f"%{search_text}%")).all()
+    users = User.query.filter(User.username.ilike(f"%{search_text}%"), User.admin != 3).all()
     posts = Post.query.filter(Post.title.ilike(f"%{search_text}%")).all()
     return render_template("search_results.html", users=users, posts=posts,
                            now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

@@ -2,25 +2,50 @@
 
 
 {% block content %}
-    <h3>All Users</h3>
     {% if users %}
         {% for user in users %}
-            <article class="media content-section">
+            <article class="media content-section" id={{ user.id }}>
                 <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) }}"
                      alt="user_image" class="rounded-circle article-img mt-2">
-                <h2 class="mt-4 mb-4 ml-4">
+                <h2 class="title mt-4 mb-4 ml-4">
                     <a href="{{ url_for('users.profile', user_id=user.id) }}">
                         {{ user.username }}
                     </a>
                 </h2>
+                {# check if super admin or admin to add delete button next to each user's card #}
+                {% if current_user.admin == 2 %}
+                    <form class="mt-4 mb-4 ml-auto" onsubmit="delete_user(user.id)">
+                        <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteUser" type="submit">
+                            {{"Delete User" if not user.admin else "Delete Admin"}}
+                        </button>
+                    </form>
+                {% endif %}
             </article>
+{#            <!-- Modal -->#}
+{#            <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel"#}
+{#                 aria-hidden="true">#}
+{#                <div class="modal-dialog" role="document">#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-header">#}
+{#                            <h5 class="modal-title" id="deleteModelLabel">Delete Post</h5>#}
+{#                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#                                <span aria-hidden="true">&times;</span>#}
+{#                            </button>#}
+{#                        </div>#}
+{#                        <div class="modal-body">#}
+{#                            Are you sure?#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>#}
+{#                            <form action="{{ url_for('super_user.delete_user', user_id=user.id) }}" method="POST">#}
+{#                                <input type="submit" class="btn btn-danger" value="Delete">#}
+{#                            </form>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
         {% endfor %}
-    {% else %}
-        <article class="media content-section">
-            <h4 class="text-muted center">No users found</h4>
-        </article>
     {% endif %}
-    <h3 class="text-muted">All Posts</h3>
     {% if posts %}
         {% for post in posts %}
             <article class="media content-section">
@@ -90,16 +115,17 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                             <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
-                                <input type="submit" class="btn btn-outline-danger" value="Save changes">
+                                <input type="submit" class="btn btn-outline-danger" value="Delete">
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
-    {% else %}
+    {% endif %}
+    {% if not users and not posts%}
         <article class="media content-section">
-            <h4 class="text-muted center">No posts found</h4>
+            <h4 class="text-muted center">No results found</h4>
         </article>
     {% endif %}
 {% endblock %}

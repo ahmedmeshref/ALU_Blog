@@ -20,8 +20,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     # activation state
     active = db.Column(db.Boolean, nullable=False, default=True)
-    # admin identifier
-    admin = db.Column(db.Boolean, nullable=False, default=False)
+    # admin identifier, if 0 => normal user, 1 => admin, 2 => super_admin
+    admin = db.Column(db.Integer, nullable=False, default=0)
     # one to many relationship between the user (author) and the posts
     # give a ref to Post class
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -50,7 +50,12 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.profile_image}')"
+        user = "end_user"
+        if self.admin == 1:
+            user = "admin"
+        elif self.admin == 2:
+            user = "super_admin"
+        return f"User('{self.username}', '{self.email}', '{self.profile_image}', active :{self.active}, {user})"
 
 
 class Post(db.Model):

@@ -52,12 +52,12 @@
                       <div class="dropdown-menu text-center small">
                         <a class="btn btn-primary dropdown-item" href="{{ url_for('users.profile', user_id=current_user.id) }}">Profile</a>
                       {#if super user#}
-                      {% if current_user.email == "a.meshref@alustudent.com" %}
+                      {% if current_user.admin == 2 %}
                         <a class="btn btn-primary dropdown-item" href="{{ url_for('super_user.register_admin') }}">
                             Add Admin
                         </a>
-                        <a class="btn btn-danger dropdown-item" href="{{ url_for('users.logout') }}">
-                            Delete Admin
+                        <a class="btn btn-primary dropdown-item" href="{{ url_for('super_user.show_all_admins') }}">
+                            All Admins
                         </a>
                       {% endif %}
                         <a class="btn btn-danger dropdown-item" href="{{ url_for('users.logout') }}">Logout</a>
