@@ -1,4 +1,3 @@
-
 // add new post form
 document.getElementById("new_post").onsubmit = function (e) {
     e.preventDefault();

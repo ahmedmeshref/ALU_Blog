@@ -14,10 +14,10 @@
                 </h2>
                 {# check if super admin or admin to add delete button next to each user's card #}
                 {% if current_user.admin == 2 %}
-                    <form class="mt-4 mb-4 ml-auto" onsubmit="delete_user(user.id)">
-                        <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteUser" type="submit">
-                            {{"Delete User" if not user.admin else "Delete Admin"}}
-                        </button>
+                    <button class="btn btn-outline-danger mt-4 mb-4 ml-auto" data-toggle="modal" data-target="#deleteUser"
+                            type="submit" onclick="delete_user(user.id, admin= {{ current_user.admin }})>
+                        {{"Delete User" if not user.admin else "Delete Admin"}}
+                    </button>
                     </form>
                 {% endif %}
             </article>
@@ -128,4 +128,8 @@
             <h4 class="text-muted center">No results found</h4>
         </article>
     {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='scripts/delete_users.js') }}?{{time}}"></script>
 {% endblock %}

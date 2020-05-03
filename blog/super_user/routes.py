@@ -41,14 +41,14 @@ def show_all_admins():
     return render_template("search_results.html", users=admins, current_user=current_user)
 
 
-@super_user.route("/delete_user/<user_id>", methods=['POST'])
-@login_required
-def delete_user(user_id):
-    # check if user
-    if not current_user.admin:
-        abort(403)
-    user = User.query.filter(User.id == user_id).first()
-    if not user:
-        abort(404)
-
-    return render_template("search_results.html", users=admins, current_user=current_user)
+# @super_user.route("/delete_user", methods=['POST'])
+# @login_required
+# def delete_user():
+#     # check if user
+#     if not current_user.admin:
+#         abort(403)
+#     user = User.query.filter(User.id == user_id).first()
+#     if not user:
+#         abort(404)
+#
+#     return render_template("search_results.html", users=admins, current_user=current_user)
