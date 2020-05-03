@@ -20,13 +20,12 @@ def register_admin():
             # generate a random password
             possible_characters = "@#_abcdefghijklmnopqrstuvwxyz1234567890"
             random_password = "".join([random.choice(possible_characters) for _ in range(6)])
-            user_password = random_password
             # hash the passowrd
-            hashed_pass = bcrypt.generate_password_hash(user_password).decode('utf-8')
+            hashed_pass = bcrypt.generate_password_hash(random_password).decode('utf-8')
             user = User(username=username.title(), email=email, password=hashed_pass, admin=True)
             db.session.add(user)
             db.session.commit()
-            new_admin_email(user, random_password)
+            new_admin_email(user)
             flash("New admin was added successfully and an email was sent to him.", "success")
             return redirect(url_for("super_user.register_admin"))
     return render_template("super_user/add_admin.html", form=form)

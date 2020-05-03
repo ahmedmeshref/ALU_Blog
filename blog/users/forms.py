@@ -16,9 +16,11 @@ class RegistrationForm(FlaskForm):
 
     # check if the email already exist
     def validate_email(self, email):
-        email_exist = User.query.filter_by(email=email.data).first()
-        if email_exist:
-            raise ValidationError('This email is already registered! Please login')
+        user = User.query.filter_by(email=email.data).first()
+        if user and not user.active:
+            raise ValidationError('Your email is already registered but deactivated! Please login to activate it.')
+        elif user:
+            raise ValidationError('Your email is already registered! Please login')
 
     # check if the username already exist
     def validate_username(self, username):
@@ -61,9 +63,11 @@ class RequestResetPasswordForm(FlaskForm):
 
     # check if the email doesn't exist
     def validate_email(self, email):
-        email_exist = User.query.filter_by(email=email.data).first()
-        if not email_exist:
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
             raise ValidationError('Email is not Registered! Please create an account!')
+        if not user.active:
+            raise ValidationError('You have deactivated your account. Please login to activate it first.')
 
 
 class ResetPasswordForm(FlaskForm):
@@ -73,4 +77,3 @@ class ResetPasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired()])
     confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
     submit = SubmitField('RESET PASSWORD')
-

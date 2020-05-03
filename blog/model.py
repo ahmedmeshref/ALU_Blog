@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     # give a ref to Post class
     posts = db.relationship('Post', backref='author', lazy=True)
 
-    def reset_password_token(self, active_sec=3600):
+    def reset_password_token(self, active_sec=7200):
         """
         create token creates in a random token for resting the users password
         """

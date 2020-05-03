@@ -39,8 +39,9 @@ def send_reset_email(user):
     # create a Message instance
     msg = Message('Reset your password', sender='norepley@alustudent.com',
                   recipients=[user.email])
-    msg.body = f""" Hi {user.username}
-Please visit the link provided down within 1 hour to reset your password.
+    msg.body = f"""Hi {user.username}, 
+
+Please visit the link provided down within 2 hour to reset your password.
 
 Link: {url_for('users.reset_password', token=token, _external=True)}
 If you didn't request a password reset, please ignore this email
