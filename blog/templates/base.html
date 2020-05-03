@@ -51,23 +51,17 @@
                       </button>
                       <div class="dropdown-menu text-center small">
                         <a class="btn btn-primary dropdown-item" href="{{ url_for('users.profile', user_id=current_user.id) }}">Profile</a>
-                        <a class="btn btn-danger dropdown-item" href="{{ url_for('users.logout') }}">Logout</a>
-                      </div>
-                  {#if super user#}
-                  {% if current_user.email == "a.meshref@alustudent.com" %}
-                      <div class="dropdown-menu text-center small">
+                      {#if super user#}
+                      {% if current_user.email == "a.meshref@alustudent.com" %}
                         <a class="btn btn-primary dropdown-item" href="{{ url_for('super_user.register_admin') }}">
                             Add Admin
                         </a>
                         <a class="btn btn-danger dropdown-item" href="{{ url_for('users.logout') }}">
                             Delete Admin
                         </a>
-                      </div>
-                      <div class="dropdown-menu text-center small">
-                        <a class="btn btn-primary dropdown-item" href="{{ url_for('users.profile', user_id=current_user.id) }}">Profile</a>
+                      {% endif %}
                         <a class="btn btn-danger dropdown-item" href="{{ url_for('users.logout') }}">Logout</a>
                       </div>
-                  {% endif %}
                   </div>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
