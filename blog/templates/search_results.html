@@ -51,22 +51,27 @@
                                 </small>
                             </div>
                             <div class=".col-sm-">
-                                {% if post.author == current_user %}
-                                    <div class="container">
-                                        <button class="btn btn-outline-primary mb-1 mt-0" data-toggle="dropdown"
-                                                style="font-size: 13px; padding: 0px; width: 25px; font-weight: bold;">≡
-                                        </button>
+                                <div class="container">
+                                  {% if post.author.admin == 1 %}
+                                      <button class="btn btn-primary btn-sm mr-2" disabled>
+                                          admin
+                                      </button>
+                                  {% elif post.author.admin == 2 %}
+                                      <button class="btn btn-primary btn-sm mr-2" disabled>
+                                          super admin
+                                      </button>
+                                  {% endif %}
+                                  {% if (current_user.admin == 1 and not post.author.admin) or (post.author == current_user) %}
+                                      <button class="btn btn-outline-primary border-0 mb-1 mt-0 p-0 font-weight-bold"
+                                              data-toggle="dropdown" style="width: 25px">≡</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="btn btn-primary dropdown-item"
-                                               href="{{ url_for('posts.edit_post', post_id=post.id) }}">Edit</a>
-                                            <button type="button" class="btn btn-danger dropdown-item"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteModel">
-                                                Delete
-                                            </button>
+                                            <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Edit</a>
+                                            <a class="btn btn-danger dropdown-item" href="{{ url_for('posts.delete_post', post_id=post.id) }}">
+                                              Delete
+                                            </a>
                                         </div>
-                                    </div>
-                                {% endif %}
+                                  {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -34,14 +34,19 @@ def show_post(post_id):
         return abort(404)
 
 
-@posts.route("/post/<post_id>/delete/", methods=['GET', 'POST'])
-@login_required
-def delete_post(post_id):
+def validate_post(post_id):
     # check if post exists or not
     post = Post.query.get_or_404(post_id)
-    # check if a user is using the url to update someone else's post
-    if post.author != current_user:
-        abort(403)
+    # check if current user is the author or the current user is an admin and the author is an end user
+    if (post.author == current_user) or (current_user.admin == 1 and post.author.admin == 0):
+        return post
+    abort(403)
+
+
+@posts.route("/post/<post_id>/delete/", methods=['DELETE'])
+@login_required
+def delete_post(post_id):
+    post = validate_post(post_id)
     db.session.delete(post)
     db.session.commit()
     flash("Deleted Successfully", "success")
@@ -51,11 +56,7 @@ def delete_post(post_id):
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
-    # check if post exists or not
-    post = Post.query.get_or_404(post_id)
-    # check if current user is the author or the current user is an admin and the author is an end user
-    if (post.author != current_user) or not (current_user.admin == 1 and not post.author.admin):
-        abort(403)
+    post = validate_post(post_id)
     # use the add post form to update the post
     form = UpdatePostForm()
     if request.method == 'POST':

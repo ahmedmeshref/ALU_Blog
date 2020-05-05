@@ -72,12 +72,12 @@
                           </small>
                         </div>
                         <div class=".col-sm-">
-                          {% if post.author == current_user %}
+                          {% if (current_user.admin == 1 and not post.author.admin) or (post.author == current_user) %}
                                 <div class="container">
                                   <button class="btn btn-outline-primary mb-1 mt-0" data-toggle="dropdown"
                                           style="font-size: 13px; padding: 0px; width: 25px;">≡</button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.edit_post',
+                                        <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.update_post',
                                          post_id=post.id) }}">
                                             Edit
                                         </a>

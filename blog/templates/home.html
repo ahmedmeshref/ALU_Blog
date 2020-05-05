@@ -58,7 +58,7 @@
                                   super admin
                               </button>
                           {% endif %}
-                          {% if (current_user.admin == 1 and not post.author.admin) or post.author == current_user %}
+                          {% if (current_user.admin == 1 and not post.author.admin) or (post.author == current_user) %}
                               <button class="btn btn-outline-primary border-0 mb-1 mt-0 p-0 font-weight-bold"
                                       data-toggle="dropdown" style="width: 25px">≡</button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
