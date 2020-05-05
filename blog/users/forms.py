@@ -50,9 +50,12 @@ class UpdateProfileForm(FlaskForm):
         # check if the new username is different from the current
         if new_username.data != current_user.username:
             # check that the new username is unique
-            username_exist = User.query.filter_by(username=new_username.data).first()
+            username_exist = User.query.filter_by(username=new_username.data.title()).first()
             if username_exist:
                 raise ValidationError('username is already taken!')
+            for char in ["@", "&", "'", "(", ")", "<", ">", '"']:
+                if char in new_username.data:
+                    raise ValidationError(f"username can't include {char}")
 
 
 class RequestResetPasswordForm(FlaskForm):

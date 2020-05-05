@@ -42,36 +42,39 @@ def show_all_admins():
     return render_template("search_results.html", users=admins, current_user=current_user)
 
 
+def verify_admin_helper(user_id):
+    # verify that the given id belongs to a current user
+    user = User.query.get_or_404(user_id)
+    # current user should be an admin
+    # no user can delete a super user
+    # a user can't delete another user with the same degree (admin -- admin)
+    if not current_user.admin or user.admin == 2 or (current_user.admin == user.admin):
+        abort(403)
+    return user
+
+
 @admin.route("/profile/<user_id>/delete_user", methods=['POST'])
 @login_required
 def delete_user(user_id):
     """
     Delete a user made by super admins, can delete users and admins, and admins, can delete users only.
+    Note: This function can only called from a user profile page.
     :param user_id: the user_id of the  target user to delete
     :return: home page
     """
-    # verify that a user is not deleting himself
-    if current_user.id == user_id:
-        abort(403)
-    # verify that the given id belongs to a current user
-    user = User.query.get_or_404(user_id)
-    # admin can't delete an admin, also no user can delete a super user
-    if user.admin == 2 or (current_user.admin == 1 and user.admin == 1):
-        abort(403)
+    user = verify_admin_helper(user_id)
     return delete_user_helper(user)
 
 
 @admin.route("/delete_user", methods=['POST'])
 @login_required
-def delete_exisiting_user():
+def admin_delete_user():
+    """
+    Delete a user made by super admins, can delete users and admins, and admins, can delete users only.
+    :return: json file contains username and email of the deleted user
+    """
     user_id = request.get_json()["user_id"]
-    # verify that the current user is a super admin
-    if current_user.admin != 2:
-        abort(403)
-    user = User.query.get_or_404(user_id)
-    # verify that the request is not to delete another super admin
-    if user.admin == 2:
-        abort(403)
+    user = verify_admin_helper(user_id)
     deleted_user_data = {"username": user.username, "email": user.email}
     try:
         delete_q = Post.__table__.delete().where(Post.user_id == user.id)
