@@ -2,7 +2,7 @@
 
 {% block content %}
     {# add post #}
-    <div class="content-section text-dark">
+    <div class="content-section text-dark new_post_container">
         <form id="new_post">
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4 text-lg">New Post</legend>
@@ -23,12 +23,12 @@
         </form>
     </div>
     {% for post in posts.items %}
-        <article class="media content-section">
+        <article class="media content-section post_container">
           <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
                alt="user_image" class="rounded-circle article-img mt-2">
           <div class="media-body">
-              <div class="container article-metadata mt-1 mb-3">
-                  <div class="row">
+              <div class="container article-metadata mb-3">
+                  <div class="row mt-1">
                     <div class="col-sm">
                        <a class="mr-2" href="{{ url_for('users.profile', user_id=post.author.id) }}">{{ post.author.username }}</a>
                        <small class="text-muted">
@@ -48,18 +48,27 @@
                       </small>
                     </div>
                     <div class=".col-sm-">
-                      {% if post.author == current_user %}
-                            <div class="container">
+                        <div class="container">
+                          {% if post.author.admin == 1 %}
+                              <button class="btn btn-primary btn-sm mr-2" disabled>
+                                  admin
+                              </button>
+                          {% elif post.author.admin == 2 %}
+                              <button class="btn btn-primary btn-sm mr-2" disabled>
+                                  super admin
+                              </button>
+                          {% endif %}
+                          {% if (current_user.admin == 1 and not post.author.admin) or post.author == current_user %}
                               <button class="btn btn-outline-primary border-0 mb-1 mt-0 p-0 font-weight-bold"
                                       data-toggle="dropdown" style="width: 25px">≡</button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.edit_post', post_id=post.id) }}">Edit</a>
+                                    <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Edit</a>
                                     <a class="btn btn-danger dropdown-item" href="{{ url_for('posts.delete_post', post_id=post.id) }}">
                                       Delete
                                     </a>
                                 </div>
-                            </div>
-                      {% endif %}
+                          {% endif %}
+                        </div>
                     </div>
                   </div>
               </div>

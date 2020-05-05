@@ -1,6 +1,6 @@
 from flask import render_template, url_for, request, flash, redirect, abort, jsonify
 from blog import db
-from blog.posts.forms import AddPostForm
+from blog.posts.forms import UpdatePostForm
 from blog.model import Post
 from flask_login import current_user, login_required
 from datetime import datetime
@@ -24,8 +24,8 @@ def new_post():
     return jsonify(data)
 
 
-@posts.route("/post/<username>/<int:post_id>")
-def show_post(username, post_id):
+@posts.route("/post/<int:post_id>")
+def show_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
         return render_template('show_post.html', post=post, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -50,14 +50,14 @@ def delete_post(post_id):
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
-def edit_post(post_id):
+def update_post(post_id):
     # check if post exists or not
     post = Post.query.get_or_404(post_id)
-    # check if a user is using the url to update someone else's post
-    if post.author != current_user:
+    # check if current user is the author or the current user is an admin and the author is an end user
+    if (post.author != current_user) or not (current_user.admin == 1 and not post.author.admin):
         abort(403)
     # use the add post form to update the post
-    form = AddPostForm()
+    form = UpdatePostForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             # check if the user updated any data
@@ -66,9 +66,7 @@ def edit_post(post_id):
                 post.content = form.content.data
                 db.session.commit()
                 flash("Updated successfully", "success")
-            return redirect(url_for('posts.show_post', username=post.author.username,
-                                    post_id=post.id))
+            return redirect(url_for('posts.show_post',post_id=post.id))
     form.title.data = post.title
     form.content.data = post.content
-    return render_template("add_post.html", title="Update Post", form=form,
-                           legend="Update Post")
+    return render_template("update_post.html", title="Update Post", form=form)

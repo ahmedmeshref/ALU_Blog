@@ -86,3 +86,7 @@ a.article-title:hover {
 .search_area {
   width: 20px;
 }
+
+.new_post_container, .post_container {
+  border-radius: 20px;
+}

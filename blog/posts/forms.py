@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Length
 from wtforms.widgets import TextArea
 
 
-class AddPostForm(FlaskForm):
+class UpdatePostForm(FlaskForm):
     """
     form for adding new posts
     """

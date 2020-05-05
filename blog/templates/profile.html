@@ -8,11 +8,11 @@
         user.profile_image) }}" alt="user_image">
         <div class="media-body">
           {% if user.admin == 1 %}
-              <button class="btn btn-primary btn-sm mr-2 position-absolute" style="right: 7.5px; top: 0" disabled>
+              <button class="btn btn-primary btn-sm position-absolute" style="right: 15px; top: 0" disabled>
                   admin
               </button>
           {% elif user.admin == 2 %}
-              <button class="btn btn-primary btn-sm mr-2 position-absolute" style="right: 7.5px; top: 0" disabled>
+              <button class="btn btn-primary btn-sm position-absolute" style="right: 15px; top: 0" disabled>
                   super admin
               </button>
           {% endif %}
