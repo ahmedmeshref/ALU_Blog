@@ -23,7 +23,8 @@
                       Delete My Account
                   </button>
               </div>
-          {% elif current_user.admin == 2 %}
+{#          the current user is a super admin and the other user is not a super admin#}
+          {% elif current_user.admin == 2 and  user.admin != 2%}
               <div class="d-flex">
                   <button class="btn btn-outline-primary" type="submit" data-toggle="modal"
                           data-target="#deleteAdminAccount">
@@ -142,7 +143,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form method="POST" action="{{ url_for('users.delete_account', user_id = current_user.id) }}">
+            <form method="POST" action="{{ url_for('users.delete_my_account', user_id = current_user.id) }}">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </form>
           </div>
@@ -165,7 +166,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form method="POST" action="{{ url_for('super_user.delete_admin', user_id = user.id) }}">
+            <form method="POST" action="{{ url_for('super_user.delete_user', user_id = user.id) }}">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </form>
           </div>

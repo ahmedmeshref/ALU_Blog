@@ -7,10 +7,10 @@ from blog.users.routes import delete_user_helper
 from blog import db, bcrypt
 import random
 
-super_user = Blueprint('super_user', __name__)
+admin = Blueprint('super_user', __name__)
 
 
-@super_user.route("/register_admin", methods=['GET', 'POST'])
+@admin.route("/register_admin", methods=['GET', 'POST'])
 @login_required
 def register_admin():
     form = AdminRegistrationForm()
@@ -32,7 +32,7 @@ def register_admin():
     return render_template("super_user/add_admin.html", form=form)
 
 
-@super_user.route("/all_admins", methods=['GET'])
+@admin.route("/all_admins", methods=['GET'])
 @login_required
 def show_all_admins():
     # validate request, made by a super user.
@@ -42,9 +42,9 @@ def show_all_admins():
     return render_template("search_results.html", users=admins, current_user=current_user)
 
 
-@super_user.route("/delete_user/<user_id>", methods=['POST'])
+@admin.route("/delete_user/<user_id>", methods=['POST'])
 @login_required
-def delete_admin(user_id):
+def delete_user(user_id):
     # verify that the current user is a super admin
     if current_user.admin != 2:
         abort(403)
@@ -53,3 +53,29 @@ def delete_admin(user_id):
     if user.admin == 2:
         abort(403)
     return delete_user_helper(user)
+
+
+@admin.route("/delete_user", methods=['POST'])
+@login_required
+def delete_exisiting_user():
+    user_id = request.get_json()["user_id"]
+    # verify that the current user is a super admin
+    if current_user.admin != 2:
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    # verify that the request is not to delete another super user
+    if user.admin == 2:
+        abort(403)
+    deleted_user_data = {"username": user.username, "email": user.email}
+    try:
+        delete_q = Post.__table__.delete().where(Post.user_id == user.id)
+        db.session.execute(delete_q)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify(deleted_user_data)
+    except:
+        db.session.rollback()
+        return abort(500)
+
+
+

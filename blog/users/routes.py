@@ -162,7 +162,7 @@ def deactivate_account(user_id):
 
 @users.route("/delete_account/<user_id>", methods=['POST'])
 @login_required
-def delete_account(user_id):
+def delete_my_account(user_id):
     # check if user exists or not
     user = User.query.get_or_404(user_id)
     # check if a user is using the url to update someone else's post

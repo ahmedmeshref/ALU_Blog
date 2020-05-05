@@ -12,13 +12,13 @@
                         {{ user.username }}
                     </a>
                 </h2>
-                {# check if super admin or admin to add delete button next to each user's card #}
-{#                {% if current_user.admin == 2 %}#}
-{#                    <button class="btn btn-outline-danger mt-4 mb-4 ml-auto" type="submit"#}
-{#                            value="{{ user.id, current_user.admin}}" id="delete_user_btn">#}
-{#                        {{"Delete User" if not user.admin else "Delete Admin"}}#}
-{#                    </button>#}
-{#                {% endif %}#}
+{#                 check if super admin or admin to add delete button next to each user's card#}
+                {% if current_user.admin == 2 and user.admin != 2%}
+                    <button class="btn btn-outline-danger mt-4 mb-4 ml-auto" type="submit"
+                            onclick="delete_user({{ user.id }}, {{ current_user.admin }})">
+                        {{"Delete User" if not user.admin else "Delete Admin"}}
+                    </button>
+                {% endif %}
             </article>
         {% endfor %}
     {% endif %}

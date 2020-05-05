@@ -1,37 +1,37 @@
 
 
-document.getElementById("delete_user_btn").onclick =
-    function (){
-    let result = confirm("Are you sure to delete?");
+function delete_user(user_id, c_user) {
+    let result = confirm("Deleting this user will wipe all of his data. Are you sure?");
     if(result){
-        delete_user();
+        delete_user_card(user_id, c_user);
     } else {
         return;
     }
 }
 
 
-// function delete_user_card() {
-//     let data = document.getElementById("delete_user_btn").value;
-//     let , admin_type;
-//     [user_id, admin_type] = data.match(/[0-9]+/g);
-//     if (admin_type != 2) {
-//         alert("Method is not allowed");
-//         reutrn;
-//     }
-//     let article = document.getElementById(`${user_id}`);
-//     if (article) article.remove();
-//     fetch(`${window.origin}/delete_user`, {
-//         method: "POST",
-//         body: JSON.stringify({
-//             "user_id": user_id
-//         }),
-//         headers: {
-//             'Content-type': 'application/json'
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(resVal => console.log(resVal['user_id']))
-//     .catch(err => console.log(err))
-//
-// }
+
+function delete_user_card(user_id, c_user) {
+    // if the current user is not a super_admin
+    console.log("I am inside");
+    if (c_user != 2) {
+        alert("Method is not allowed");
+        reutrn;
+    }
+    console.log("I am inside");
+    let article = document.getElementById(`${user_id}`);
+    if (article) article.remove();
+    console.log("I deleted article");
+    fetch(`${window.origin}/delete_user`, {
+        method: "POST",
+        body: JSON.stringify({
+            "user_id": user_id
+        }),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(resVal => console.log( `username: ${resVal['username']}, email: ${resVal['email']} `))
+    .catch(err => console.log(err))
+}
