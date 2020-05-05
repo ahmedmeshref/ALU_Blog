@@ -13,36 +13,13 @@
                     </a>
                 </h2>
                 {# check if super admin or admin to add delete button next to each user's card #}
-                {% if current_user.admin == 2 %}
-                    <button class="btn btn-outline-danger mt-4 mb-4 ml-auto" data-toggle="modal" data-target="#deleteUser"
-                            type="submit" value="{{ user.id, current_user.admin}}" id="delete_user_btn">
-                        {{"Delete User" if not user.admin else "Delete Admin"}}
-                    </button>
-                {% endif %}
+{#                {% if current_user.admin == 2 %}#}
+{#                    <button class="btn btn-outline-danger mt-4 mb-4 ml-auto" type="submit"#}
+{#                            value="{{ user.id, current_user.admin}}" id="delete_user_btn">#}
+{#                        {{"Delete User" if not user.admin else "Delete Admin"}}#}
+{#                    </button>#}
+{#                {% endif %}#}
             </article>
-{#            <!-- Modal -->#}
-{#            <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel"#}
-{#                 aria-hidden="true">#}
-{#                <div class="modal-dialog" role="document">#}
-{#                    <div class="modal-content">#}
-{#                        <div class="modal-header">#}
-{#                            <h5 class="modal-title" id="deleteModelLabel">Delete Post</h5>#}
-{#                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#                                <span aria-hidden="true">&times;</span>#}
-{#                            </button>#}
-{#                        </div>#}
-{#                        <div class="modal-body">#}
-{#                            Are you sure?#}
-{#                        </div>#}
-{#                        <div class="modal-footer">#}
-{#                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>#}
-{#                            <form action="{{ url_for('super_user.delete_user', user_id=user.id) }}" method="POST">#}
-{#                                <input type="submit" class="btn btn-danger" value="Delete">#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
         {% endfor %}
     {% endif %}
     {% if posts %}

@@ -1,8 +1,9 @@
-from flask import Blueprint, request, render_template, flash, url_for, redirect, abort
+from flask import Blueprint, request, render_template, flash, url_for, redirect, abort, jsonify
 from blog.super_user.forms import AdminRegistrationForm
 from blog.super_user.utils import new_admin_email
 from flask_login import login_required, current_user
-from blog.model import User
+from blog.model import User, Post
+from blog.users.routes import delete_user_helper
 from blog import db, bcrypt
 import random
 
@@ -41,14 +42,14 @@ def show_all_admins():
     return render_template("search_results.html", users=admins, current_user=current_user)
 
 
-# @super_user.route("/delete_user", methods=['POST'])
-# @login_required
-# def delete_user():
-#     # check if user
-#     if not current_user.admin:
-#         abort(403)
-#     user = User.query.filter(User.id == user_id).first()
-#     if not user:
-#         abort(404)
-#
-#     return render_template("search_results.html", users=admins, current_user=current_user)
+@super_user.route("/delete_user/<user_id>", methods=['POST'])
+@login_required
+def delete_admin(user_id):
+    # verify that the current user is a super admin
+    if current_user.admin != 2:
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    # verify that the request is not to delete another super user
+    if user.admin == 2:
+        abort(403)
+    return delete_user_helper(user)

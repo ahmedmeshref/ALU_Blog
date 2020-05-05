@@ -8,7 +8,6 @@ from datetime import datetime
 from sqlalchemy import desc
 from blog.users.utiles import send_reset_email, save_picture, delete_current_picture
 
-
 users = Blueprint('users', __name__)
 
 
@@ -74,10 +73,9 @@ def profile(user_id):
     # send the user posts
     current_page = request.args.get('current_page', 1, type=int)
     posts = Post.query.filter_by(author=user).order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
-    image_f = url_for('static', filename='profile_pics/' + user.profile_image)
-    return render_template("profile.html", title=f"profile - {user.username}",
-                           profile_image=image_f, change_profile=same_user,
-                           posts=posts, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    image_f = url_for('static', filename='profile_pics/')
+    return render_template("profile.html", title=f"profile - {user.username}", posts=posts,
+                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            datetime=datetime, user=user)
 
 
@@ -146,9 +144,9 @@ def reset_password(token):
     return render_template("reset_password.html", title="Create New Password", form=form)
 
 
-@users.route('/profile/<user_id>/delete_user/', methods=['POST'])
+@users.route('/profile/deactivate_account/<user_id>', methods=['POST'])
 @login_required
-def delete_user(user_id):
+def deactivate_account(user_id):
     # check if user exists or not
     user = User.query.get_or_404(user_id)
     # check if a user is using the url to update someone else's post
@@ -158,6 +156,29 @@ def delete_user(user_id):
     delete_current_picture()
     current_user.profile_image = "in_active.png"
     db.session.commit()
-    flash("Account Deleted Successfully", "success")
+    flash("Account deactivated Successfully", "success")
     return redirect(url_for('users.logout'))
 
+
+@users.route("/delete_account/<user_id>", methods=['POST'])
+@login_required
+def delete_account(user_id):
+    # check if user exists or not
+    user = User.query.get_or_404(user_id)
+    # check if a user is using the url to update someone else's post
+    if user != current_user:
+        abort(403)
+    return delete_user_helper(user)
+
+
+def delete_user_helper(user):
+    try:
+        delete_q = Post.__table__.delete().where(Post.user_id == user.id)
+        db.session.execute(delete_q)
+        db.session.delete(user)
+        db.session.commit()
+        flash("Account deleted Successfully", "success")
+        return redirect(url_for('users.login'))
+    except:
+        db.session.rollback()
+        return abort(500)

@@ -4,17 +4,30 @@
 {% block content %}
     <div class="content-section">
       <div class="media">
-        <img class="rounded-circle account-img mt-2" src="{{ profile_image }}">
+        <img class="rounded-circle account-img mt-2" src="{{ url_for('static', filename='profile_pics/' +
+        user.profile_image) }}" alt="user_image">
         <div class="media-body">
           <h2 class="account-heading mt-4">{{ user.username }}</h2>
           <p class="text-secondary">{{ user.email }}</p>
-          {% if change_profile %}
+          {% if user.id == current_user.id %}
               <div class="d-flex">
                   <form method="POST" action="">
                      <button class="btn btn-outline-primary mr-1">Update Profile</button>
                   </form>
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
-                      Delete Account
+                  <button type="button" class="btn btn-outline-primary mr-1" data-toggle="modal"
+                          data-target="#deactivateAccount">
+                      Deactivate My Account
+                  </button>
+                  <button class="btn btn-outline-primary" type="submit" data-toggle="modal"
+                          data-target="#deleteAccount">
+                      Delete My Account
+                  </button>
+              </div>
+          {% elif current_user.admin == 2 %}
+              <div class="d-flex">
+                  <button class="btn btn-outline-primary" type="submit" data-toggle="modal"
+                          data-target="#deleteAdminAccount">
+                      {{"Delete User" if not user.admin else "Delete Admin"}}
                   </button>
               </div>
           {% endif %}
@@ -26,13 +39,13 @@
     <div class="container-fluid">
         {% for post in posts.items %}
             <article class="media content-section">
-              <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
+              <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) }}"
                    alt="user_image" class="rounded-circle article-img mt-2">
               <div class="media-body">
                   <div class="container article-metadata mt-1">
                       <div class="row">
                         <div class="col-sm">
-                           <a class="mr-2" href="{{ url_for('users.profile', user_id=post.author.id) }}">{{ post.author.username }}</a>
+                           <a class="mr-2">{{ user.username }}</a>
                            <small class="text-muted">
                               {% set time_diff = datetime.strptime(now, "%Y-%m-%d %H:%M:%S") -
                               datetime.strptime(post.date.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S") %}
@@ -69,7 +82,7 @@
                         </div>
                       </div>
                   </div>
-                <h2><a class="article-title" href="{{ url_for('posts.show_post', username=post.author.username, post_id=post.id) }}">
+                <h2><a class="article-title" href="{{ url_for('posts.show_post', username=user.username, post_id=post.id) }}">
                     {{ post.title }}</a></h2>
                 <p class="article-content text-dark">{{ post.content }}</p>
               </div>
@@ -91,8 +104,31 @@
         </div>
     </div>
 
+    {#deactivate Account model#}
+    <div class="modal fade" id="deactivateAccount" tabindex="-1" role="dialog" aria-labelledby="deactivateAccountLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteUserLabel">Deactivate Your Account?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form method="POST" action="{{ url_for('users.deactivate_account', user_id = current_user.id) }}">
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     {#delete Account model#}
-    <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -102,15 +138,42 @@
             </button>
           </div>
           <div class="modal-body">
-            You won't have access to your account data anymore.
+            All of your data and activities will be deleted. Are you sure?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form method="POST" action="{{ url_for('users.delete_user', user_id = current_user.id) }}">
+            <form method="POST" action="{{ url_for('users.delete_account', user_id = current_user.id) }}">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </form>
           </div>
         </div>
       </div>
     </div>
+
+    {#delete admin account model#}
+    <div class="modal fade" id="deleteAdminAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAdminAccountLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteUserLabel">Delete User Account?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form method="POST" action="{{ url_for('super_user.delete_admin', user_id = user.id) }}">
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='scripts/delete_user_main.js') }}?{{time}}"></script>
 {% endblock %}
