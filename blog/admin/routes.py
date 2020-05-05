@@ -1,13 +1,13 @@
 from flask import Blueprint, request, render_template, flash, url_for, redirect, abort, jsonify
-from blog.super_user.forms import AdminRegistrationForm
-from blog.super_user.utils import new_admin_email
+from blog.admin.forms import AdminRegistrationForm
+from blog.admin.utils import new_admin_email
 from flask_login import login_required, current_user
 from blog.model import User, Post
 from blog.users.routes import delete_user_helper
 from blog import db, bcrypt
 import random
 
-admin = Blueprint('super_user', __name__)
+admin = Blueprint('admin', __name__)
 
 
 @admin.route("/register_admin", methods=['GET', 'POST'])
@@ -28,29 +28,35 @@ def register_admin():
             db.session.commit()
             new_admin_email(user)
             flash("New admin was added successfully and an email was sent to him.", "success")
-            return redirect(url_for("super_user.register_admin"))
-    return render_template("super_user/add_admin.html", form=form)
+            return redirect(url_for("admin.register_admin"))
+    return render_template("admin/add_admin.html", form=form)
 
 
 @admin.route("/all_admins", methods=['GET'])
 @login_required
 def show_all_admins():
-    # validate request, made by a super user.
+    # validate request, made by a super admin.
     if current_user.admin != 2:
         return abort(403)
     admins = User.query.filter(User.admin == 1).all()
     return render_template("search_results.html", users=admins, current_user=current_user)
 
 
-@admin.route("/delete_user/<user_id>", methods=['POST'])
+@admin.route("/profile/<user_id>/delete_user", methods=['POST'])
 @login_required
 def delete_user(user_id):
-    # verify that the current user is a super admin
-    if current_user.admin != 2:
+    """
+    Delete a user made by super admins, can delete users and admins, and admins, can delete users only.
+    :param user_id: the user_id of the  target user to delete
+    :return: home page
+    """
+    # verify that a user is not deleting himself
+    if current_user.id == user_id:
         abort(403)
+    # verify that the given id belongs to a current user
     user = User.query.get_or_404(user_id)
-    # verify that the request is not to delete another super user
-    if user.admin == 2:
+    # admin can't delete an admin, also no user can delete a super user
+    if user.admin == 2 or (current_user.admin == 1 and user.admin == 1):
         abort(403)
     return delete_user_helper(user)
 
@@ -63,7 +69,7 @@ def delete_exisiting_user():
     if current_user.admin != 2:
         abort(403)
     user = User.query.get_or_404(user_id)
-    # verify that the request is not to delete another super user
+    # verify that the request is not to delete another super admin
     if user.admin == 2:
         abort(403)
     deleted_user_data = {"username": user.username, "email": user.email}

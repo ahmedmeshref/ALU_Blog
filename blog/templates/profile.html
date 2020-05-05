@@ -7,6 +7,11 @@
         <img class="rounded-circle account-img mt-2" src="{{ url_for('static', filename='profile_pics/' +
         user.profile_image) }}" alt="user_image">
         <div class="media-body">
+          {% if user.admin == 1 %}
+              <button class="btn btn-success btn-sm mr-2" style="position: absolute; right: 7px; top: 0" disabled>
+                  admin
+              </button>
+          {% endif %}
           <h2 class="account-heading mt-4">{{ user.username }}</h2>
           <p class="text-secondary">{{ user.email }}</p>
           {% if user.id == current_user.id %}
@@ -24,7 +29,7 @@
                   </button>
               </div>
 {#          the current user is a super admin and the other user is not a super admin#}
-          {% elif current_user.admin == 2 and  user.admin != 2%}
+          {% elif (current_user.admin == 2 and user.admin != 2) or (current_user.admin == 1 and not user.admin)%}
               <div class="d-flex">
                   <button class="btn btn-outline-primary" type="submit" data-toggle="modal"
                           data-target="#deleteAdminAccount">
@@ -166,7 +171,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form method="POST" action="{{ url_for('super_user.delete_user', user_id = user.id) }}">
+            <form method="POST" action="{{ url_for('admin.delete_user', user_id = user.id) }}">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </form>
           </div>

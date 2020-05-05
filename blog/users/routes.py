@@ -160,7 +160,7 @@ def deactivate_account(user_id):
     return redirect(url_for('users.logout'))
 
 
-@users.route("/delete_account/<user_id>", methods=['POST'])
+@users.route("/delete_my_account/<user_id>", methods=['POST'])
 @login_required
 def delete_my_account(user_id):
     # check if user exists or not

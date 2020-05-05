@@ -14,23 +14,21 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('SIGN UP')
 
-    # check if the email already exist
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user and not user.active:
-            raise ValidationError('Your email is already registered but deactivated! Please login to activate it.')
-        elif user:
-            raise ValidationError('Your email is already registered! Please login')
-
-    # check if the username already exist
     def validate_username(self, username):
-        username_exist = User.query.filter_by(username=username.data).first()
-        if username_exist:
+        user = User.query.filter(User.username == username.data.title()).first()
+        if user:
             raise ValidationError('username is already taken!')
         unvalid_chars = ["@", "&", "'", "(", ")", "<", ">", '"']
         for char in unvalid_chars:
             if char in username.data:
                 raise ValidationError(f"username can't include {char}")
+
+    def validate_email(self, email):
+        user = User.query.filter(User.email == email.data).first()
+        if user and not user.active:
+            raise ValidationError('Your email is already registered but deactivated! Please login to activate it.')
+        elif user:
+            raise ValidationError('Your email is already registered! Please login')
 
 
 class LoginForm(FlaskForm):

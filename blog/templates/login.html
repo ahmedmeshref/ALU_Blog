@@ -4,7 +4,7 @@
 <div class="content-section text-dark">
     <form action="" method="POST">
         {{ form.hidden_tag() }}
-        <fieldset class="form-group ">
+        <fieldset class="form-group">
             <legend class="border-bottom mb-4 text-lg">Sign In</legend>
             <div class="form-group">
                 {{ form.email.label(class='form-control-label') }}
@@ -38,7 +38,7 @@
             </div>
         </fieldset>
         <div class="form-group">
-            {{ form.submit(class="btn btn-outline-primary") }}
+            {{ form.submit(class="btn btn-outline-primary btn-lg btn-block") }}
         </div>
         <small class="text-muted form-group">
             <a href="{{ url_for('users.request_reset_password') }}">Forgot your password?</a>

@@ -4,7 +4,7 @@
 {% block content %}
     {% if users %}
         {% for user in users %}
-            <article class="media content-section" id={{ user.id }}>
+            <article class="media content-section {{ user.id }}">
                 <img src="{{ url_for('static', filename='profile_pics/' + user.profile_image) }}"
                      alt="user_image" class="rounded-circle article-img mt-2">
                 <h2 class="title mt-4 mb-4 ml-4">
@@ -24,7 +24,7 @@
     {% endif %}
     {% if posts %}
         {% for post in posts %}
-            <article class="media content-section">
+            <article class="media content-section {{ post.author.id }}">
                 <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
                      alt="user_image" class="rounded-circle article-img mt-2">
                 <div class="media-body">
@@ -70,7 +70,12 @@
                             </div>
                         </div>
                     </div>
-                    <h2>{{ post.title }}</h2>
+                    <h2>
+                        <a class="article-title" href="{{ url_for('posts.show_post', username=post.author.username,
+                         post_id=post.id) }}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
                     <p class="article-content text-dark">{{ post.content }}</p>
                 </div>
             </article>
