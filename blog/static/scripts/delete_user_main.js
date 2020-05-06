@@ -28,7 +28,7 @@ function delete_user_card(user_id, c_user_type) {
             'Content-type': 'application/json'
         }
     })
-        .then(response => response.json())
-        .then(resVal => console.log(`username: ${resVal['username']}, email: ${resVal['email']} `))
-        .catch(err => console.log(err))
+    .then(response => response.json())
+    .then(resVal => console.log(`username: ${resVal['username']}, email: ${resVal['email']} `))
+    .catch(err => console.log(err))
 }

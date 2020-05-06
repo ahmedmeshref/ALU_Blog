@@ -35,3 +35,5 @@ document.getElementById("new_post").onsubmit = function (e) {
         })
     }
 }
+
+

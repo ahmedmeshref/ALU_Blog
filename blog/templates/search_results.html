@@ -24,7 +24,7 @@
     {% endif %}
     {% if posts %}
         {% for post in posts %}
-            <article class="media content-section {{ post.author.id }}">
+            <article class="media content-section {{ post.author.id }}" id={{ post.id }}>
                 <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"
                      alt="user_image" class="rounded-circle article-img mt-2">
                 <div class="media-body">
@@ -66,9 +66,9 @@
                                               data-toggle="dropdown" style="width: 25px">≡</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Edit</a>
-                                            <a class="btn btn-danger dropdown-item" href="{{ url_for('posts.delete_post', post_id=post.id) }}">
+                                            <button class="btn btn-danger dropdown-item" type="submit" onclick="delete_post({{ post.id }})">
                                               Delete
-                                            </a>
+                                            </button>
                                         </div>
                                   {% endif %}
                                 </div>
@@ -118,4 +118,6 @@
 
 {% block script %}
     <script src="{{ url_for('static', filename='scripts/delete_user_main.js') }}?{{time}}"></script>
+    <script src="{{ url_for('static', filename='scripts/delete_post.js') }}?{{time}}"></script>
 {% endblock %}
+

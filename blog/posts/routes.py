@@ -43,14 +43,18 @@ def validate_post(post_id):
     abort(403)
 
 
-@posts.route("/post/<post_id>/delete/", methods=['DELETE'])
+@posts.route("/posts/delete_post", methods=['POST'])
 @login_required
-def delete_post(post_id):
+def delete_post():
+    post_id = request.get_json()['post_id']
     post = validate_post(post_id)
+    data = jsonify({
+        'post_id': post.id,
+        'title': post.title
+    })
     db.session.delete(post)
     db.session.commit()
-    flash("Deleted Successfully", "success")
-    return redirect(url_for('main.home'))
+    return data
 
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
