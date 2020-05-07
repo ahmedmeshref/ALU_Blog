@@ -22,6 +22,7 @@
             </div>
         </form>
     </div>
+    <div id="add_new_posts"></div>
     {% for post in posts.items %}
         <article class="media content-section post_container" id={{ post.id }}>
           <img src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image) }}"

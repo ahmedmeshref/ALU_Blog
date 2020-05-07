@@ -9,20 +9,26 @@ from flask import Blueprint
 posts = Blueprint('posts', __name__)
 
 
-@posts.route("/new_post/", methods=["POST"])
+@posts.route("/new_post", methods=["POST"])
 @login_required
 def new_post():
     title = request.get_json()['title']
     description = request.get_json()['description']
-    error = False
-    data = {}
-    new_post = Post(title=title, content=description, author=current_user)
-    db.session.add(new_post)
-    db.session.commit()
-    data['description'] = description
-    data['title'] = title
-    return jsonify(data)
-
+    try:
+        new_post = Post(title=title, content=description, author=current_user)
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({
+            'id': new_post.id,
+            'title': new_post.title,
+            'description': new_post.content,
+            'profile_image': new_post.author.profile_image,
+            'username': new_post.author.username,
+            'author_id': new_post.author.id
+        })
+    except:
+        db.rollback()
+        abort(500)
 
 @posts.route("/post/<int:post_id>")
 def show_post(post_id):
