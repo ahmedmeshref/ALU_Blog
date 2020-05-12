@@ -30,6 +30,7 @@ def new_post():
         db.rollback()
         abort(500)
 
+
 @posts.route("/post/<int:post_id>")
 def show_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
@@ -77,7 +78,7 @@ def update_post(post_id):
                 post.content = form.content.data
                 db.session.commit()
                 flash("Updated successfully", "success")
-            return redirect(url_for('posts.show_post',post_id=post.id))
+            return redirect(url_for('posts.show_post', post_id=post.id))
     form.title.data = post.title
     form.content.data = post.content
     return render_template("update_post.html", title="Update Post", form=form)

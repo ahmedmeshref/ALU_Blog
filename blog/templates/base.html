@@ -92,7 +92,11 @@
           <div class="content-section">
             <h3>Notifications</h3>
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">
+                    <a href="{{ url_for('main.home') }}">
+                        Latest Posts
+                    </a>
+                </li>
                 <li class="list-group-item list-group-item-light">Announcements</li>
                 <li class="list-group-item list-group-item-light">Calendars</li>
               </ul>

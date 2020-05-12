@@ -45,17 +45,18 @@ document.getElementById("new_post").onsubmit = async function add_post(e) {
 
 
 function write_post(res_val) {
-    console.log(res_val);
     document.getElementById("add_new_posts").innerHTML = `
         <article class="media content-section post_container" id='${res_val["id"]}'>
-<!--            write it as a link, can reach from everywhere, Links, How to make async for other users-->
-          <img src="../profile_pics/${res_val["profile_image"]}"
+          <!-- write it as a link, can reach from everywhere, Links, How to make async for other users -->
+          <img src='../profile_pics/${res_val["profile_image"]}'
                alt="user_image" class="rounded-circle article-img mt-2">
           <div class="media-body">
               <div class="container article-metadata mb-3">
                   <div class="row mt-1">
                     <div class="col-sm">
-                       <a class="mr-2" href="{{ url_for('users.profile', user_id=${res_val["author_id"]}) }}">${res_val["username"]}</a>
+                       <a class="mr-2" href='http://127.0.0.1:5000/profile/${res_val["author_id"]}'>
+                            ${res_val["username"]}
+                       </a>
                        <small class="text-muted">
                             1 seconds ago
                       </small>
@@ -64,8 +65,9 @@ function write_post(res_val) {
                         <div class="container">
                           <button class="btn btn-outline-primary border-0 mb-1 mt-0 p-0 font-weight-bold"
                                   data-toggle="dropdown" style="width: 25px">≡</button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="btn btn-primary dropdown-item" href="{{ url_for('posts.update_post', post_id='${res_val["id"]}') }}">
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
+                                <a class="btn btn-primary dropdown-item" 
+                                href='http://127.0.0.1:5000/post/${res_val["id"]}/update'>
                                     Edit
                                 </a>
                                 <button class="btn btn-danger dropdown-item" type="submit" onclick="delete_post(${res_val["id"]})">
@@ -76,8 +78,11 @@ function write_post(res_val) {
                     </div>
                   </div>
               </div>
-            <h2><a class="article-title" href="{{ url_for('posts.show_post', username=post.author.username, post_id='${res_val["id"]}') }}">
-                ${res_val["title"]}</a></h2>
+            <h2>
+                <a class="article-title" href='http://127.0.0.1:5000/post/${res_val["id"]}'>
+                    ${res_val["title"]}
+                </a>
+            </h2>
             <p class="article-content text-dark">${res_val["description"]}</p>
           </div>
         </article>`

@@ -67,16 +67,11 @@ def profile(user_id):
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
         return redirect(url_for('users.change_profile', user_id=user.id))
-    same_user = True
-    if user != current_user:
-        same_user = False
     # send the user posts
     current_page = request.args.get('current_page', 1, type=int)
     posts = Post.query.filter_by(author=user).order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
-    image_f = url_for('static', filename='profile_pics/')
     return render_template("profile.html", title=f"profile - {user.username}", posts=posts,
-                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime, user=user)
+                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime=datetime, user=user)
 
 
 @users.route("/profile/<user_id>/update_profile", methods=['POST', 'GET'])
