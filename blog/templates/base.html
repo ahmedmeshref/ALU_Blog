@@ -93,12 +93,20 @@
             <h3>Notifications</h3>
               <ul class="list-group">
                 <li class="list-group-item list-group-item-light">
-                    <a href="{{ url_for('main.home') }}">
+                    <a href="{{ url_for('main.home') }}" class="side_bar_link" >
                         Latest Posts
                     </a>
                 </li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">
+                    <a href="{{ url_for("main.announcements") }}" class="side_bar_link" target="_blank">
+                        Announcements
+                    </a>
+                </li>
+                <li class="list-group-item list-group-item-light">
+                    <a href="https://calendar.google.com/calendar/r" class="side_bar_link" target="_blank">
+                        Calendars
+                    </a>
+                </li>
               </ul>
           </div>
         </div>

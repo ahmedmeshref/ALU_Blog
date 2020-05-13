@@ -90,3 +90,14 @@ a.article-title:hover {
 .new_post_container, .post_container {
   border-radius: 20px;
 }
+
+.side_bar_link {
+  color: darkblue;
+}
+
+.side_bar_link:hover{
+  color: dodgerblue;
+  text-decoration: white;
+  text-underline: None;
+}
+

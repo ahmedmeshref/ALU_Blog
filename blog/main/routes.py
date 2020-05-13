@@ -38,3 +38,11 @@ def search():
     return render_template("search_results.html", users=users, posts=posts,
                            now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            datetime=datetime, current_user=current_user)
+
+
+@main.route('/home/announcements')
+@login_required
+def announcements():
+    return render_template("errors/under_development.html")
+
+
