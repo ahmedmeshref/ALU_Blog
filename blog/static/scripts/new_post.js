@@ -48,7 +48,7 @@ function write_post(res_val) {
     document.getElementById("add_new_posts").innerHTML = `
         <article class="media content-section post_container" id='${res_val["id"]}'>
           <!-- write it as a link, can reach from everywhere, Links, How to make async for other users -->
-          <img src='../profile_pics/${res_val["profile_image"]}'
+          <img src='/static/profile_pics/${res_val["profile_image"]}'
                alt="user_image" class="rounded-circle article-img mt-2">
           <div class="media-body">
               <div class="container article-metadata mb-3">
