@@ -3,14 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-from blog.config import DevConfig, DepConfig
+from blog.config import Config
 
 app = Flask(__name__)
-env = "Dep"
-if env == "Dep":
-    app.config.from_object(DepConfig)
-else:
-    app.config.from_object(DevConfig)
+app.config.from_object(Config)
 # make the application an instance from SQLAlchamy
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
