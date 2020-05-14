@@ -69,7 +69,3 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post({self.title}, {self.date})"
-
-
-# create all tables in the database in case if it is not created yet
-db.create_all()
