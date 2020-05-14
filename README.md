@@ -22,7 +22,7 @@ $ cd ALU_Blog
 
 **Setup your database**
 
-navigate to SQL shell
+Open SQL shell
 ```bash
 # create a new database from sql shell
 $ CREATE DATABASE ALU_Blog;
@@ -30,20 +30,11 @@ $ CREATE DATABASE ALU_Blog;
 
  
 
-**Use the package manager [pip](https://pip.pypa.io/en/stable/) to install flask and 
-all required libraries.**
+**Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all required libraries.**
 
 ```bash
-pip install flask
-pip install Flask-SQLAlchemy
-pip install sqlalchemy
-pip install flask-wtf
-pip install Flask-Login
-pip install wtforms-validators
-pip install itsdangerous
-pip install Flask-Mail
-pip install secrets
-pip install pillow
+# install all required packages from the requirements file
+$ pip install -r requirements.txt
 ```
 **Edit Configuration file**
 
@@ -69,7 +60,9 @@ user account
 using sql 
 - To add admins, you need to be register as a super admin.
 
+## Deployment ``Heroku``
 
+To deploy the website on Heroku 
 
 ## Built With
 

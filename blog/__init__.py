@@ -33,3 +33,6 @@ app.register_blueprint(posts)
 app.register_blueprint(main)
 app.register_blueprint(errors)
 app.register_blueprint(admin)
+
+
+
