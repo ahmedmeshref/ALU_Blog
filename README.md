@@ -66,7 +66,7 @@ using sql
 
 __Install guinicorn locally__
 ```
-pip install gunicorn
+$ pip install gunicorn
 ```
 __Install Heroku CLI__
 
@@ -74,46 +74,46 @@ https://devcenter.heroku.com/articles/heroku-cli
 
 __Login via CLI__
 ```
-heroku login
+$ heroku login
 ```
 
 __Create app__
 ```
-heroku create alublog
+$ heroku create alublog
 ```
 
 __Create database__
 ```
-heroku addons:create heroku-postgresql:hobby-dev --app alublog
+$ heroku addons:create heroku-postgresql:hobby-dev --app alublog
 ```
 
 __Get URI__
 ```
-heroku config --app alublog
+$ heroku config --app alublog
 
 # set the BADATBASE_URI to the output 
 ```
 
 __Deploy with Git__
 ```
-git add . 
-git commit -m 'Intial Deploy'
-heroku git:remote -a appname
-git push heroku master
+$ git add . 
+$ git commit -m 'Intial Deploy'
+$ heroku git:remote -a appname
+$ git push heroku master
 ```
 
 __Add table to remote database__
 ```
 heroku run python
->>> from blog import db
->>> db.create_all()
->>>exit()
+$ from blog import db
+$ db.create_all()
+$ exit()
 ```
 
 __Visit app__
 ```
 # command will direct you to the website
-heroku open
+$ heroku open
 ```
 
 ## Built With
