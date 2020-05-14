@@ -62,7 +62,59 @@ using sql
 
 ## Deployment ``Heroku``
 
-To deploy the website on Heroku 
+> To deploy the website on Heroku 
+
+__Install guinicorn locally__
+```
+pip install gunicorn
+```
+__Install Heroku CLI__
+
+https://devcenter.heroku.com/articles/heroku-cli
+
+__Login via CLI__
+```
+heroku login
+```
+
+__Create app__
+```
+heroku create alublog
+```
+
+__Create database__
+```
+heroku addons:create heroku-postgresql:hobby-dev --app alublog
+```
+
+__Get URI__
+```
+heroku config --app alublog
+
+# set the BADATBASE_URI to the output 
+```
+
+__Deploy with Git__
+```
+git add . 
+git commit -m 'Intial Deploy'
+heroku git:remote -a appname
+git push heroku master
+```
+
+__Add table to remote database__
+```
+heroku run python
+>>> from app import db
+>>> db.create_all()
+>>>exit()
+```
+
+__Visit app__
+```
+# command will direct you to the website
+heroku open
+```
 
 ## Built With
 
