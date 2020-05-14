@@ -105,7 +105,7 @@ git push heroku master
 __Add table to remote database__
 ```
 heroku run python
->>> from app import db
+>>> from blog import db
 >>> db.create_all()
 >>>exit()
 ```
