@@ -22,7 +22,6 @@ bcrypt==3.1.7
 beautifulsoup4==4.8.0
 bitarray==1.0.1
 bkcharts==0.2
-bleach==3.1.0
 blinker==1.4
 bokeh==1.3.4
 boto==2.49.0
@@ -49,7 +48,6 @@ decorator==4.4.0
 defusedxml==0.6.0
 diff-match-patch==20181111
 distributed==2.5.2
-Django==3.0.2
 docutils==0.15.2
 entrypoints==0.3
 et-xmlfile==1.0.1
@@ -150,7 +148,6 @@ patsy==0.5.1
 pep8==1.7.1
 pexpect==4.8.0
 pickleshare==0.7.5
-Pillow==6.2.0
 pkginfo==1.5.0.1
 pluggy==0.13.0
 ply==3.11
