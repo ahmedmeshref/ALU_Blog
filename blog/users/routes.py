@@ -19,7 +19,10 @@ def register():
     if request.method == 'POST':
         if form.validate_on_submit():
             hashed_pass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(username=form.username.data.title(), email=form.email.data, password=hashed_pass)
+            if form.email.data == "a.meshref@alustudent.com":
+                user = User(username=form.username.data.title(), email=form.email.data, password=hashed_pass)
+            else:
+                user = User(username=form.username.data.title(), email=form.email.data, password=hashed_pass)
             db.session.add(user)
             db.session.commit()
             flash(f"Account created successfully! Now you can login", 'success')
