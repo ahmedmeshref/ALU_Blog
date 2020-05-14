@@ -14,7 +14,7 @@ class DevConfig:
 
 class DepConfig:
     SECRET_KEY = "472267410d1672db337b9e9ca710ee1b"
-    MAIL_SERVER = ""
+    MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = "a.meshref@alustudent.com"
