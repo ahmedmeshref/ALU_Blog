@@ -97,14 +97,14 @@ $ heroku config --app alublog
 __Deploy with Git__
 ```
 $ git add . 
-$ git commit -m 'Intial Deploy'
-$ heroku git:remote -a appname
+$ git commit -m 'Deploy'
+$ heroku git:remote -a alublog
 $ git push heroku master
 ```
 
 __Add table to remote database__
 ```
-heroku run python
+$ heroku run python
 $ from blog import db
 $ db.create_all()
 $ exit()
