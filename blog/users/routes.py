@@ -90,8 +90,6 @@ def change_profile(user_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             if form.new_picture.data:
-                # delete the current picture from the profile_pics file locally
-                delete_current_picture()
                 # add the given picture to the profile_pics file and get the path of the picture
                 new_picture_fn = save_picture(form.new_picture.data)
                 # change the name of the profile picture in the database in the database

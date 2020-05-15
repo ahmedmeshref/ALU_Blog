@@ -97,7 +97,7 @@ $ heroku config --app alublog
 __Deploy with Git__
 ```
 $ git add . 
-$ git commit -m 'Deploy'
+$ git commit -m 'Final Deploy'
 $ heroku git:remote -a alublog
 $ git push heroku master
 ```
