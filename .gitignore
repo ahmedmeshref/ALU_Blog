@@ -1,5 +1,7 @@
+
 .idea
 __pycache__/
 Pipfile
-.vscode
-alublog/
+.alublog/
+.vscode/
+alublog
