@@ -26,9 +26,7 @@ Open SQL shell
 ```bash
 # create a new database from sql shell
 $ CREATE DATABASE ALU_Blog;
-```
-
- 
+``` 
 
 **Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all required libraries.**
 
