@@ -9,7 +9,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 # make the application an instance from SQLAlchamy
 db = SQLAlchemy(app)
+# provide hash utilities for app
 bcrypt = Bcrypt(app)
+# set up a login manager for app
 login_manager = LoginManager(app)
 # set the login route when the app tries to access login_required
 login_manager.login_view = 'users.login'
@@ -17,8 +19,6 @@ login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 # initialize the mail extension
 mail = Mail(app)
-app.debug = True
-
 
 # call all the routes to run after initializing db and app
 from blog.users.routes import users
@@ -27,12 +27,8 @@ from blog.main.routes import main
 from blog.errors.handel_errors import errors
 from blog.admin.routes import admin
 
-
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(main)
 app.register_blueprint(errors)
 app.register_blueprint(admin)
-
-
-
