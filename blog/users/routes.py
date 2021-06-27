@@ -173,6 +173,6 @@ def delete_user_helper(user):
         db.session.commit()
         flash("Account deleted Successfully", "success")
         return redirect(url_for('users.login'))
-    except:
+    except Exception:
         db.session.rollback()
         return abort(500)
