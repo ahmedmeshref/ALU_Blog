@@ -60,15 +60,14 @@ def logout():
     return redirect(url_for("users.login"))
 
 
-@users.route("/profile/<user_id>", methods=['GET', 'POST'])
+@users.route("/profile/<user_id>", methods=['GET'])
 @login_required
 def profile(user_id):
-    # check if the current user is viewing his own profile or someone else's
+    # check if profile with the provided id exists
     user = User.query.get_or_404(user_id)
-    if request.method == "POST":
-        return redirect(url_for('users.change_profile', user_id=user.id))
-    # send the user posts
+    # get page number for posts' pagination
     current_page = request.args.get('current_page', 1, type=int)
+    # get the user posts
     posts = Post.query.filter_by(author=user).order_by(desc(Post.date)).paginate(page=current_page, per_page=6)
     return render_template("profile.html", title=f"profile - {user.username}", posts=posts,
                            now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime=datetime, user=user)
