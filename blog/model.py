@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
         """
         # create an instance of the ts model and set an expiration time
         s = ts(app.config['SECRET_KEY'], active_sec)
-        # create a token with a user id with a payload
+        # create a token with a user id and a payload
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     # verify_reset_password_token is a static function that doesn't accept

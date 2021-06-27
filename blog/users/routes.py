@@ -105,7 +105,7 @@ def change_profile(user_id):
                            profile_image=image_f, form=form)
 
 
-@users.route("/reset_password_email", methods=['GET', 'POST'])
+@users.route("/reset_password", methods=['GET', 'POST'])
 def request_reset_password():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))

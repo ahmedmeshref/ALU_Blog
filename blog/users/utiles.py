@@ -47,3 +47,4 @@ Link: {url_for('users.reset_password', token=token, _external=True)}
 If you didn't request a password reset, please ignore this email
 """
     mail.send(msg)
+
