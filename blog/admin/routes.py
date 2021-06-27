@@ -15,7 +15,7 @@ admin = Blueprint('admin', __name__)
 def register_admin():
     form = AdminRegistrationForm()
     if request.method == "POST":
-        if form.validate_on_submit():
+        if form.validate_on_submit() and current_user.admin == 2:
             email = form.email.data
             username = form.username.data
             # generate a random password
@@ -29,6 +29,8 @@ def register_admin():
             new_admin_email(user)
             flash("New admin was added successfully and an email was sent to him.", "success")
             return redirect(url_for("admin.register_admin"))
+        else:
+            flash('Data is not valid')
     return render_template("admin/add_admin.html", form=form)
 
 
