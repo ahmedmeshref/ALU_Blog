@@ -5,3 +5,4 @@ Pipfile
 .alublog/
 .vscode/
 alublog
+migrations

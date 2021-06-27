@@ -46,7 +46,7 @@ Edit the following attributes from the config file
 
 **Run**
 ```bash
-$ python run.py
+$ python app.py
 ```
 Open http://127.0.0.1:5000 in a browser.
 

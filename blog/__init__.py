@@ -4,11 +4,14 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from blog.config import Config
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object(Config)
 # make the application an instance from SQLAlchamy
 db = SQLAlchemy(app)
+# define db migration
+migrate = Migrate(app, db)
 # provide hash utilities for app
 bcrypt = Bcrypt(app)
 # set up a login manager for app
