@@ -13,9 +13,13 @@ admin = Blueprint('admin', __name__)
 @admin.route("/register_admin", methods=['GET', 'POST'])
 @login_required
 def register_admin():
+    # validate request, made by a super admin.
+    if current_user.admin != 2:
+        return abort(403)
+    # create form
     form = AdminRegistrationForm()
     if request.method == "POST":
-        if form.validate_on_submit() and current_user.admin == 2:
+        if form.validate_on_submit():
             email = form.email.data
             username = form.username.data
             # generate a random password
