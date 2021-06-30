@@ -77,7 +77,7 @@ def delete_user(user_id):
 def admin_delete_user():
     """
     Delete a user made by super admins, can delete users and admins, and admins, can delete users only.
-    :return: json file contains username and email of the deleted user
+    :return: json object contains username and email of the deleted user
     """
     user_id = request.get_json()["user_id"]
     user = verify_admin_helper(user_id)
